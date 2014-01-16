@@ -1,0 +1,13 @@
+---
+layout: default
+title: Toon Verwerft about Web Development
+---
+
+<div class=" blog-overview">
+    <h1>Latest Articles</h1>
+    <div class="posts">
+        {% for post in site.posts %}
+            {% include post-entry.html %}
+        {% endfor %}
+    </div>
+</div>

@@ -1,0 +1,35 @@
+---
+layout: default
+---
+<div class="post-details">
+
+    <h1>{{ page.title }}</h1>
+    <div class="pull-right">
+        <span class="meta label label-info">{{ page.date | date_to_string }}</span>
+    </div>
+
+     <small>
+        Tags:
+        {% for tag in page.tags %}
+        <a href="/tags/{{ tag }}" class="label label-primary tag" title="View posts tagged with &quot;{{ tag }}&quot;">{{ tag }}</a>
+        {% if forloop.last != true %} {% endif %}
+        {% endfor %}
+    </small>
+
+    <div class="post">
+        {% if page.image %}
+        <img src="/images/blog/{{ page.image }}" class="post-banner" alt=""/>
+        {% endif %}
+
+        {{ content }}
+    </div>
+
+    <a name="comments"></a>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_identifier = '{{ page.url }}';
+        var disqus_title = '{{ page.title }}';
+        var disqus_url = 'http://veewee.github.io{{ page.url }}';
+    </script>
+    <script src="/js/disqus-comments.js"></script>
+</div>

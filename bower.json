@@ -1,0 +1,9 @@
+{
+  "name": "veewee.github.io",
+  "version": "0.0.0",
+  "dependencies": {
+      "bootstrap": "3.0.2",
+      "jquery": "2.0.3",
+      "google-code-prettify": "1.0.1"
+  }
+}

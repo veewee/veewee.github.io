@@ -1,0 +1,108 @@
+@import "_config";
+
+/*****************************************************************************/
+/*
+/* Common
+/*
+/*****************************************************************************/
+
+/* Global Reset */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+}
+
+/*****************************************************************************/
+/*
+/* Site
+/*
+/*****************************************************************************/
+body {
+  position: relative;
+  overflow-x: hidden;
+}
+
+#content {
+  margin-top: 70px;
+}
+.nav-icon {
+  a {
+    padding: 12px 5px !important;
+    img {
+      width: 32px;
+    }
+  }
+}
+
+.personal-info {
+  h2 {
+    font-size: 150%;
+  }
+}
+
+/*****************************************************************************/
+/*
+/* Home Page
+/*
+/*****************************************************************************/
+.home {
+  .blog-overview {
+    h1 {
+      margin-bottom: 30px;
+    }
+  }
+}
+
+/*****************************************************************************/
+/*
+/* Posts list
+/*
+/*****************************************************************************/
+.posts {
+  h2 {
+    font-size: 150%;
+    margin-top: 0;
+  }
+  p small {
+    font-size: 90%;
+    color: $metadataColor;
+  }
+  .post {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #CCC;
+  }
+}
+
+/*****************************************************************************/
+/*
+/* Post detail list
+/*
+/*****************************************************************************/
+.post-details {
+  #disqus_thread {
+    margin-top: 40px;
+  }
+  .post {
+    margin-top: 10px;
+    border-top: 1px solid #CCC;
+    padding-top: 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #CCC;
+  }
+  .post-banner {
+    width: 100%;
+    height: 100%;
+    margin-bottom: 15px;
+  }
+  ul {
+    padding-left: 25px;
+  }
+  p {
+    margin: 15px 0;
+  }
+}
