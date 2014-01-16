@@ -110,8 +110,8 @@ thumb: 20140114/thumb-grand-opening.png
   src: '**/*'
 }
 
-grunt.registerTask('build', [
-    // all pre-configured tasks and finally:
+grunt.registerTask('github-deploy', [
+    'default',
     'gh-pages'
 ]);
 
@@ -121,7 +121,7 @@ grunt.registerTask('build', [
     Now, when you want to publish your site, it's just one simple command:
 </p>
 {% highlight sh %}
-~$ grunt
+~$ grunt github-deploy
 {% endhighlight %}
 <p>
     This will first clean up all temporary files and validate your Jekyll site, javascript and compass files.

@@ -33,7 +33,7 @@ module.exports = function (grunt) {
         files: [
           '<%= yeoman.app %>/**/*.{html,yml,md,mkd,markdown}',
           '_config.yml',
-          '!<%= yeoman.app %>/vendor'
+          '!<%= yeoman.app %>/_bower_components'
         ],
         tasks: ['jekyll:server']
       },
@@ -117,7 +117,7 @@ module.exports = function (grunt) {
         httpImagesPath: '/images',
         httpGeneratedImagesPath: '/images/generated',
         outputStyle: 'expanded',
-        raw: 'extensions_dir = "<%= yeoman.app %>/vendor"\n'
+        raw: 'extensions_dir = "<%= yeoman.app %>/_bower_components"\n'
       },
       dist: {
         options: {
@@ -258,7 +258,7 @@ module.exports = function (grunt) {
             // Like Jekyll, exclude files & folders prefixed with an underscore
             '!**/_*{,/**}'
             // Explicitly add any files your site needs for distribution here
-            //'vendor/jquery/jquery.js',
+            //'_bower_components/jquery/jquery.js',
             //'favicon.ico',
             //'apple-touch*.png'
           ],
@@ -300,7 +300,7 @@ module.exports = function (grunt) {
         'Gruntfile.js',
         '<%= yeoman.app %>/js/**/*.js',
         'test/spec/**/*.js',
-        '!<%= yeoman.app %>/js/vendor/**/*'
+        '!<%= yeoman.app %>/js/_bower_components/**/*'
       ]
     },
     csscss: {
@@ -397,23 +397,25 @@ module.exports = function (grunt) {
     'jekyll:dist',
     'concurrent:dist',
     'useminPrepare',
-    // 'concat',
+    'concat',
     'autoprefixer:dist',
-    // 'cssmin',
-    // 'uglify',
+    'cssmin',
+    'uglify',
     // 'imagemin',
     // 'svgmin',
     'rev',
     'usemin',
-    'htmlmin',
-
-    // Commit to github.io
-    'gh-pages'
+    'htmlmin'
   ]);
 
   grunt.registerTask('default', [
     'check',
     'test',
     'build'
+  ]);
+
+  grunt.registerTask('github-deploy', [
+    'default',
+    'gh-pages'
   ]);
 };
