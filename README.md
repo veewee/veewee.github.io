@@ -1,5 +1,5 @@
-## veewee.github.io
-
-This is [my personal GitHub page](http://veewee.github.io/) made with Jekyll and based on
-[Eric Jones' work](http://erjjones.github.com/).
-I will post my thoughts about what I do here, but I also accepts any fixes to my articles/tutorials/guides.
+veewee.github.io
+================
+This branch contains the source code, which will be parsed by Jekyll and Grunt.
+Check the 'master' branch for the generated code.
+More information about the set-up can be found in [my first blog article](http://veewee.github.io/blog/grand-opening/). 
