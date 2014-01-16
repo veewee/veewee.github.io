@@ -88,7 +88,37 @@ thumb: 20140114/thumb-grand-opening.png
 
 ## Publishing
 <p>
-    When you want to publish your site, it's just one simple command:
+    So, you finished your blog and want to place it on github.io?
+    I forgot to tell you there is one little problem left.
+    Github.io used the root of the master branch to find your index.html file.
+    Because yeoman creates your site in a subfolder called "app", github.io will not find your filed.
+    That is why we need to separate our development code from the final site that will be placed on the 'master' branch.
+    This can be done by creating an <a href="http://www.git-tower.com/files/applicationHelp/pgs/Refs_Branches_DetachedOrphaned.html">'orphan'</a> branch, called develop.
+    When you finished your blog, the final site should be committed to 'master' and the source code should be committed to 'develop'.
+    I hear you say: So much work to deploy my blog?
+    Fortunately there is a grunt tool named <a href="https://npmjs.org/package/grunt-gh-pages">gh-pages</a> which does the job.
+    I used following configuration which will commit my 'dist' folder of the 'develop' branch to the 'master' branch in git.
+</p>
+
+{% highlight js %}
+'gh-pages': {
+  options: {
+    base: 'dist',
+    branch: 'master',
+    message: 'Auto-generated build',
+  },
+  src: '**/*'
+}
+
+grunt.registerTask('build', [
+    // all pre-configured tasks and finally:
+    'gh-pages'
+]);
+
+{% endhighlight %}
+
+<p>
+    Now, when you want to publish your site, it's just one simple command:
 </p>
 {% highlight sh %}
 ~$ grunt
@@ -97,6 +127,7 @@ thumb: 20140114/thumb-grand-opening.png
     This will first clean up all temporary files and validate your Jekyll site, javascript and compass files.
     When everything is good to go, it will build the static version of your website for distribution.
     The files in the distribution folder will be minimized and optimized for quick access.
+    After all actions are done, the optimized version will be pushed to your master branch, using the gh-pages tool in grunt.
 </p>
 ## Conclusion
 <p>

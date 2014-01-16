@@ -339,6 +339,19 @@ module.exports = function (grunt) {
         'compass:dist',
         'copy:dist'
       ]
+    },
+
+    'gh-pages': {
+      options: {
+        base: 'dist',
+        branch: 'master',
+        message: 'Auto-generated build',
+        user: {
+          name: 'veewee',
+          email: 'toonverwerft@gmail.com'
+        }
+      },
+      src: '**/*'
     }
   });
 
@@ -392,8 +405,11 @@ module.exports = function (grunt) {
     // 'svgmin',
     'rev',
     'usemin',
-    'htmlmin'
-    ]);
+    'htmlmin',
+
+    // Commit to github.io
+    'gh-pages'
+  ]);
 
   grunt.registerTask('default', [
     'check',
