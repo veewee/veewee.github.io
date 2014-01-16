@@ -3,7 +3,7 @@
     <title>Toon Verwerft - VeeWee</title>
     <link href="http://veewee.github.io/atom.xml" rel="self"/>
     <link href="http://veewee.github.io/"/>
-    <updated>2014-01-16T22:08:18+01:00</updated>
+    <updated>2014-01-16T22:38:19+01:00</updated>
     <id>http://veewee.github.io</id>
     <author>
         <name>Toon Verwerft</name>
@@ -98,7 +98,35 @@
 &lt;h2&gt;Publishing&lt;/h2&gt;
 
 &lt;p&gt;
-    When you want to publish your site, it's just one simple command:
+    So, you finished your blog and want to place it on github.io?
+    I forgot to tell you there is one little problem left.
+    Github.io used the root of the master branch to find your index.html file.
+    Because yeoman creates your site in a subfolder called &quot;app&quot;, github.io will not find your filed.
+    That is why we need to separate our development code from the final site that will be placed on the 'master' branch.
+    This can be done by creating an &lt;a href=&quot;http://www.git-tower.com/files/applicationHelp/pgs/Refs_Branches_DetachedOrphaned.html&quot;&gt;'orphan'&lt;/a&gt; branch, called develop.
+    When you finished your blog, the final site should be committed to 'master' and the source code should be committed to 'develop'.
+    I hear you say: So much work to deploy my blog?
+    Fortunately there is a grunt tool named &lt;a href=&quot;https://npmjs.org/package/grunt-gh-pages&quot;&gt;gh-pages&lt;/a&gt; which does the job.
+    I used following configuration which will commit my 'dist' folder of the 'develop' branch to the 'master' branch in git.
+&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;js&quot;&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;gh-pages&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;base&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;dist&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;branch&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;master&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Auto-generated build&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;src&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;**/*&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;grunt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;registerTask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;build&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// all pre-configured tasks and finally:&lt;/span&gt;
+    &lt;span class=&quot;s1&quot;&gt;&amp;#39;gh-pages&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+    Now, when you want to publish your site, it's just one simple command:
 &lt;/p&gt;
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;sh&quot;&gt;~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;grunt
@@ -108,6 +136,7 @@
     This will first clean up all temporary files and validate your Jekyll site, javascript and compass files.
     When everything is good to go, it will build the static version of your website for distribution.
     The files in the distribution folder will be minimized and optimized for quick access.
+    After all actions are done, the optimized version will be pushed to your master branch, using the gh-pages tool in grunt.
 &lt;/p&gt;
 
 &lt;h2&gt;Conclusion&lt;/h2&gt;
