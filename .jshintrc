@@ -19,6 +19,7 @@
   "globals": {
     "$": false,
     "jQuery": false,
-    "prettyPrint": false
+    "prettyPrint": false,
+    "embed_disqus_comments": false
   }
 }

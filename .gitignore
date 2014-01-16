@@ -29,3 +29,4 @@ node_modules
 .tmp
 .idea
 atlassian-ide-plugin.xml
+_site
