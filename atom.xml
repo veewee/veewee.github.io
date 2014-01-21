@@ -3,7 +3,7 @@
     <title>Toon Verwerft - VeeWee</title>
     <link href="http://veewee.github.io/atom.xml" rel="self"/>
     <link href="http://veewee.github.io/"/>
-    <updated>2014-01-17T00:17:59+01:00</updated>
+    <updated>2014-01-21T08:25:01+01:00</updated>
     <id>http://veewee.github.io</id>
     <author>
         <name>Toon Verwerft</name>
@@ -19,14 +19,14 @@
         <content type="html">&lt;p&gt;
     With a new year, come some new resolutions. I was already thinking of creating a blog for quite some time,
     but the new year forced me to finally get this site up and running. So why did I start this blog?
-    Not to tell you who I am, but to inform you about some cool stuff I encounter during developing web applications.
+    Not to tell you who I am, but to inform you about some cool stuff I encounter during the development of web applications.
 &lt;/p&gt;
 
 &lt;p&gt;
     Just another blog you think? Ok that's true ... Except ...&lt;br /&gt;
     Last year I found myself digging in the latest subjects of Web Development.
-    Some of these subjects have poor documentation and are not handled in many blog articles.
-    My goal is to help you fix the issues that I encounter while using open-source modules.
+    Some of these subjects are poor documented and are not handled by many blog articles.
+    My goal is to help you fix the issues that I encountered while using open-source modules.
     That, and off course to tell you more about some cool tools / projects I found.
 &lt;/p&gt;
 
@@ -39,20 +39,21 @@
 &lt;p&gt;
     The first problem while creating this blog, was deciding which platform to use.
     At first there were the obvious platforms like Wordpress or some well-known hosted services like Blogger.
-    Because I rather do not use these platforms, I went on a blog-platform-quest.
+    Because I rather didn't want to use these platforms, I went on a blog-platform-quest.
     After a while I bumped into &lt;a href=&quot;http://jekyllrb.com/&quot; target=&quot;_blank&quot;&gt;Jekyll&lt;/a&gt;.
-    This Ruby based static site generator is easy to use and is perfect for building something as simple as this.
+    This Ruby based static site generator is easy to use and is perfect for building something as simple as this blog.
     Extra bonus: you can deploy to github pages instead of wasting your own web space!
 &lt;/p&gt;
 
 &lt;p&gt;
-    Off course, there were dozens of people who already workes with Jekyll before me.
+    Off course, there were dozens of people who already worked with Jekyll before me.
     That is Why I searched for some good articles about building a blog for GitHub pages.
     One of the results I found was the
     &lt;a href=&quot;http://erjjones.github.io/blog/How-I-built-my-blog-in-one-day/&quot; target=&quot;_blank&quot;&gt;&amp;quot;How to build a blog in one day&amp;quot;&lt;/a&gt;
     article by
     &lt;a href=&quot;http://erjjones.github.io/&quot; target=&quot;_blank&quot;&gt;Eric Jones&lt;/a&gt;.
-    This was a good place to start, but after some boring repeated tasks like tools-configuration, I found a great tool to build this site:
+    This was a good place to start, but after some boring repeated tasks like the configuration of tools,
+    I found a great tool to build this site:
 &lt;/p&gt;
 
 &lt;h2&gt;Installation&lt;/h2&gt;
@@ -72,7 +73,7 @@
         &lt;li&gt;Bower: Twitter Bootstrap / jQuery / ...&lt;/li&gt;
     &lt;/ul&gt;
 
-    All that it took to let me focus on the lay-out and content, was 2 commands:
+    All that it took to let me focus on the lay-out and content, were 2 commands:
 &lt;/p&gt;
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;sh&quot;&gt;~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;npm install -g generator-jekyllrb
@@ -90,7 +91,7 @@
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;
-    This command will launch the Jekyll server and will rebuild the static distribution on file changes.
+    This command will launch the Jekyll server and will rebuild the static website on file changes.
     When the static site is build, the livereload task will refresh your browser, so you can validate your changes right away.
     Also your compass files will be automatically converted to usable CSS files.
 &lt;/p&gt;
@@ -100,10 +101,11 @@
 &lt;p&gt;
     So, you finished your blog and want to place it on github.io?
     I forgot to tell you there is one little problem left.
-    Github.io used the root of the master branch to find your index.html file.
-    Because yeoman creates your site in a subfolder called &quot;app&quot;, github.io will not find your filed.
-    That is why we need to separate our development code from the final site that will be placed on the 'master' branch.
-    This can be done by creating an &lt;a href=&quot;http://www.git-tower.com/files/applicationHelp/pgs/Refs_Branches_DetachedOrphaned.html&quot;&gt;'orphan'&lt;/a&gt; branch, called develop.
+    Github.io uses the root of the master branch to find your index.html file.
+    Because yeoman creates your site in a subfolder called &quot;app&quot;, github.io will not find your files.
+    That is why we need to separate our development code from the final site.
+    The distribution version will be placed on the 'master' branch and the main code will be placed on a separate branch named 'develop'.
+    In GIT, this can be done by creating an &lt;a href=&quot;http://www.git-tower.com/files/applicationHelp/pgs/Refs_Branches_DetachedOrphaned.html&quot;&gt;'orphan'&lt;/a&gt; branch, in this case named 'develop'.
     When you finished your blog, the final site should be committed to 'master' and the source code should be committed to 'develop'.
     I hear you say: So much work to deploy my blog?
     Fortunately there is a grunt tool named &lt;a href=&quot;https://npmjs.org/package/grunt-gh-pages&quot;&gt;gh-pages&lt;/a&gt; which does the job.
