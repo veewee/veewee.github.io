@@ -66,10 +66,10 @@ thumb: 20140114/thumb-grand-opening.jpg
     All that it took to let me focus on the lay-out and content, were 2 commands:
 </p>
 
-{% highlight sh %}
+<pre class="prettyprint lang-sh">
 ~$ npm install -g generator-jekyllrb
 ~$ yo jekyllrb
-{% endhighlight %}
+</pre>
 
 ## Development
 <p>
@@ -77,9 +77,9 @@ thumb: 20140114/thumb-grand-opening.jpg
     Several handy tasks are pre-configured for you to use. For example:
 </p>
 
-{% highlight sh %}
+<pre class="prettyprint lang-sh">
 ~$ grunt serve
-{% endhighlight %}
+</pre>
 
 <p>
     This command will launch the Jekyll server and will rebuild the static website on file changes.
@@ -102,7 +102,7 @@ thumb: 20140114/thumb-grand-opening.jpg
     I used following configuration which will commit my 'dist' folder of the 'develop' branch to the 'master' branch in git.
 </p>
 
-{% highlight js %}
+<pre class="prettyprint lang-js">
 'gh-pages': {
   options: {
     base: 'dist',
@@ -117,14 +117,14 @@ grunt.registerTask('github-deploy', [
     'gh-pages'
 ]);
 
-{% endhighlight %}
+</pre>
 
 <p>
     Now, when you want to publish your site, it's just one simple command:
 </p>
-{% highlight sh %}
+<pre class="prettyprint lang-sh">
 ~$ grunt github-deploy
-{% endhighlight %}
+</pre>
 <p>
     This will first clean up all temporary files and validate your Jekyll site, javascript and compass files.
     When everything is good to go, it will build the static version of your website for distribution.
