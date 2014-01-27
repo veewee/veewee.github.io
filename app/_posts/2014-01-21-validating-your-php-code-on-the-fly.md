@@ -72,7 +72,7 @@ thumb: thumb-grunt.jpg
 
 <p><strong>composer.json</strong></p>
 
-<pre class="prettyprint lang-js">
+{% highlight js %}
 {
     "name": "veewee/validating-on-the-fly",
     "require": {
@@ -91,16 +91,16 @@ thumb: thumb-grunt.jpg
         }
     }
 }
-</pre>
+{% endhighlight %}
 <p>
     As you can see, composer will download Zend Framework 2 to the vendor directory.
     When you add the option `--dev` during the installation, Phpspec and PHP-CS-Fixer will also be downloaded.
     The last part of this configuration file will provide autoloading for the custom Export and Import module.
     To download and install all the dependencies, one command is being used:
 </p>
-<pre class="prettyprint lang-sh">
+{% highlight sh %}
 ~$ composer install --dev --prefer-dist
-</pre>
+{% endhighlight %}
 
 ## Configuring phpspec
 <p>
@@ -116,7 +116,7 @@ thumb: thumb-grunt.jpg
     Let's take a look at the configuration file for our application:
 </p>
 <p><strong>phpspec.yml</strong></p>
-<pre class="prettyprint lang-yml">
+{% highlight yaml %}
 formatter.name: dot
 suites:
   Export:
@@ -128,16 +128,16 @@ suites:
     namespace: Import
     src_path: 'module/Import/src/'
     spec_path: 'module/Import/'
-</pre>
+{% endhighlight %}
 
 <p>
     One of the downsides of Phpspec is that, at the moment, you can not run suites based on suite name.
     To test this configuration, you can run following commands:
 </p>
-<pre class="prettyprint lang-sh">
+{% highlight sh %}
 ~$ ./vendor/bin/phpspec run module/Export/src
 ~$ ./vendor/bin/phpspec run module/Import/src
-</pre>
+{% endhighlight %}
 
 ## Configuring php-cs-fixer
 <p>
@@ -154,8 +154,8 @@ suites:
 <p>
     <strong>.php_cs</strong>
 </p>
-<pre class="prettyprint lang-php">
-&lt;?php
+{% highlight php %}
+<?php
 $finder = Symfony\CS\Finder\DefaultFinder::create()
     ->exclude('language')
     ->exclude('view')
@@ -167,15 +167,15 @@ $config = Symfony\CS\Config\Config::create();
 $config->fixers(Symfony\CS\FixerInterface::PSR2_LEVEL);
 $config->finder($finder);
 return $config;
-</pre>
+{% endhighlight %}
 
 <p>
     To test this configuration, you can run following commands:
 </p>
-<pre class="prettyprint lang-sh">
+{% highlight sh %}
 ~$ ./vendor/bin/php-cs-fixer fix module/Export --dry-run
 ~$ ./vendor/bin/php-cs-fixer fix module/Import --dry-run
-</pre>
+{% endhighlight %}
 
 ## Automate the testing process
 <p>
@@ -209,7 +209,7 @@ return $config;
     Here is the sample configuration for the current project:
 </p>
 
-<pre class="prettyprint lang-js">
+{% highlight js %}
 phpspec: {
   options: {
     prefix: './vendor/bin/'
@@ -221,16 +221,16 @@ phpspec: {
     specs: 'module/Import/src'
   }
 }
-</pre>
+{% endhighlight %}
 
 <p>
     To run spec tests, you can use following commands:
 </p>
-<pre class="prettyprint lang-sh">
+{% highlight sh %}
 ~$ grunt phpspec
 ~$ grunt phpspec:export
 ~$ grunt phpspec:import
-</pre>
+{% endhighlight %}
 
 
 ### Grunt-php-cs-fixer
@@ -243,7 +243,7 @@ phpspec: {
     Here is the sample configuration for the current project:
 </p>
 
-<pre class="prettyprint lang-js">
+{% highlight js %}
 // Place this parameter before grunt.initConfig() method:
 var fixCs = grunt.option('fixcs') || false;
 
@@ -264,22 +264,22 @@ phpcsfixer: {
     dir: 'module/Import'
   }
 }
-</pre>
+{% endhighlight %}
 
 <p>
     To run the cs fixer, you can use following commands:
 </p>
-<pre class="prettyprint lang-sh">
-// Validating:
+{% highlight sh %}
+# Validating:
 ~$ grunt phpcsfixer
 ~$ grunt phpcsfixer:export
 ~$ grunt phpcsfixer:import
 
-// Fixing
+# Fixing:
 ~$ grunt phpcsfixer --fixcs
 ~$ grunt phpcsfixer:export --fixcs
 ~$ grunt phpcsfixer:import --fixcs
-</pre>
+{% endhighlight %}
 
 ### Grunt-Phplint
 <p>
@@ -291,21 +291,21 @@ phpcsfixer: {
     Here is the sample configuration for the current project:
 </p>
 
-<pre class="prettyprint lang-js">
+{% highlight js %}
 phplint: {
   export: ['module/Export/**/*.php'],
   import: ['module/Import/**/*.php']
 }
-</pre>
+{% endhighlight %}
 
 <p>
     To run PHP lint, you can use following commands:
 </p>
-<pre class="prettyprint lang-sh">
+{% highlight sh %}
 ~$ grunt phplint
 ~$ grunt phplint:export
 ~$ grunt phplint:import
-</pre>
+{% endhighlight %}
 
 
 ### Grunt-watch
@@ -320,7 +320,7 @@ phplint: {
     This is why I decided to run the tests in the order: lint, csfixer, phpspec.
     Here is the sample configuration for the current project:
 </p>
-<pre class="prettyprint lang-js">
+{% highlight js %}
 watch: {
   export: {
     files: ['module/Export/**/*.php'],
@@ -331,14 +331,14 @@ watch: {
     tasks: ['phplint:import', 'phpcsfixer:import', 'phpspec:import']
   }
 },
-</pre>
+{% endhighlight %}
 
 <p>
     To start the watcher and automate the tests, you only have to use one command:
 </p>
-<pre class="prettyprint lang-sh">
+{% highlight sh %}
 ~$ grunt watch
-</pre>
+{% endhighlight %}
 
 
 ### Run all tests in one
@@ -346,15 +346,15 @@ watch: {
     For Continious Integration it would be nice if all tests could be run in one command.
     Well off course this is possible! It is just one line of configuration:
 </p>
-<pre class="prettyprint lang-js">
+{% highlight js %}
 grunt.registerTask('test', ['phplint', 'phpcsfixer', 'phpspec']);
-</pre>
+{% endhighlight %}
 <p>
     To start the complete test, you can use following command:
 </p>
-<pre class="prettyprint lang-sh">
+{% highlight sh %}
 ~$ grunt test
-</pre>
+{% endhighlight %}
 
 
 ## Conclusion
