@@ -4,8 +4,8 @@ title:  "Validating your PHP code on the fly"
 category: general
 tags: grunt phpspec zf2 php
 summary: It's amazing how much time you can loose while running PHP tests. First you alter your code or test. Next you start your test and wait for it to finish. Finally you find out you messed up and start the process all over again. In this article I am going to show you how to automate PHP testing, so you can focus on adding business value to your application.
-image: 20140121/grunt-php.jpg
-thumb: thumb-grunt.jpg
+image: 20140121/automation.jpg
+thumb: 20140121/thumb-automation.jpg
 ---
 
 <p>
