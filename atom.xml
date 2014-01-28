@@ -3,13 +3,209 @@
     <title>Toon Verwerft - VeeWee</title>
     <link href="http://veewee.github.io/atom.xml" rel="self"/>
     <link href="http://veewee.github.io/"/>
-    <updated>2014-01-23T08:38:51+01:00</updated>
+    <updated>2014-01-28T21:03:46+01:00</updated>
     <id>http://veewee.github.io</id>
     <author>
         <name>Toon Verwerft</name>
         <uri>http://veewee.github.io/</uri>
         <email>toonverwerft@gmail.com</email>
     </author>
+    
+    <entry>
+        <title>PHPBenelux 2014</title>
+        <link href="http://veewee.github.io/blog/php-benelux-2014"/>
+        <updated>2014-01-27T00:00:00+01:00</updated>
+        <id>http://veewee.github.io/blog/php-benelux-2014</id>
+        <content type="html">&lt;p&gt;
+    Last weekend was the annual &lt;a href=&quot;http://conference.phpbenelux.eu/2014/&quot; target=&quot;_blank&quot;&gt;PHPBenlux&lt;/a&gt; conference.
+    With a small delegation of the &lt;a href=&quot;http://www.phpro.be/&quot; target=&quot;_blank&quot;&gt;Phpro&lt;/a&gt; crew,
+    I went to the Ter Elst conference center for 2 days filled with talks, discussions and pleasure.
+    In this article you can find a small summary of the talks that inspired me.
+&lt;/p&gt;
+
+&lt;h2&gt;Day 1:&lt;/h2&gt;
+
+&lt;h3&gt;Keynote: Mentoring developers&lt;/h3&gt;
+
+&lt;p&gt;
+    It won't be a surprise if I told you that the conference opened with a motivational keynote.
+    &lt;a href=&quot;http://emsmith.net/&quot; target=&quot;_blank&quot;&gt;Elizabeth Marie Smith&lt;/a&gt; took us back to her childhood and told
+    us why and how she started with programming.
+    It reminded me of the time when I wrote my first super flashy website and of my first steps in PHP development.
+    When you start learning something new, you NEED somebody to look up to. This will help you grow so much faster.
+    In a next stadium it is your turn to give something back. Help the people around you that need your help, but DON'T
+    spoon-feed the n00b.
+&lt;/p&gt;
+
+&lt;h3&gt;What hackers do once they get passed your code&lt;/h3&gt;
+
+&lt;p&gt;
+    In this first session, &lt;a href=&quot;http://mattiasgeniar.be/&quot; target=&quot;_blank&quot;&gt;Mattias Geniar&lt;/a&gt; showed us what hackers can do once they get passed your code.
+    A presentation filled with clear examples on how hackers will try to gain and remain access to your server.
+    Most of the time, hackers will use automated tools to find a weak point in your code.
+    Once they have found this weak spot, they will try to compromise your website.
+    This can be done by injecting obfuscated 'eval' scripts into your website.
+    Or worse: Injecting a complete &lt;a href=&quot;http://en.wikipedia.org/wiki/Backdoor_Shell&quot; target=&quot;_blank&quot;&gt;backdoor shell&lt;/a&gt;
+    on which hackers can fully control your hosting environment.
+&lt;/p&gt;
+
+&lt;h3&gt;Refactoring to Design Patters&lt;/h3&gt;
+
+&lt;p&gt;
+    In this talk, &lt;a href=&quot;http://www.whitewashing.de/&quot; target=&quot;_blank&quot;&gt;Benjamin Eberlei&lt;/a&gt;
+    gave us a hands-on demo on refactoring.
+    One of his first quotes was an unquestionable statement:
+    &lt;em&gt;&quot;Neglecting Object-Oriented design leads to under-engineering,
+    but focusing soley on Design-Pattern leads to over-engineering&quot;&lt;/em&gt;.
+    Next he started with his demo, in which he made small changes to a legacy controller.
+    By making these small changes, it was very clear were the
+    &lt;a href=&quot;http://en.wikipedia.org/wiki/Factory_pattern&quot; target=&quot;_blank&quot;&gt;Factory&lt;/a&gt;,
+    &lt;a href=&quot;http://en.wikipedia.org/wiki/Facade_pattern&quot; target=&quot;_blank&quot;&gt;Facade&lt;/a&gt; and
+    &lt;a href=&quot;http://en.wikipedia.org/wiki/Strategy_pattern&quot; target=&quot;_blank&quot;&gt;Strategy&lt;/a&gt;
+    patterns were needed.
+    Some tips to keep in mind:
+    &lt;ul&gt;
+        &lt;li&gt;Get in control on how objects are created and centralize object creation.&lt;/li&gt;
+        &lt;li&gt;Refactor step by step, otherwise you will be debugging all the time.&lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/p&gt;
+
+&lt;h3&gt;PHP Performance Under the hood&lt;/h3&gt;
+
+&lt;p&gt;
+    The last talk of the day was brought to us by &lt;a href=&quot;http://daveyshafik.com/&quot; target=&quot;_blank&quot;&gt;Davey Shafik&lt;/a&gt;.
+    It was a rather heavy subject to close the day with, but it gave a good oversight of what happens in PHP internally.
+    Nice to see how the PHP code gets tokenized, transformed into opcodes which are interpreted into memory.
+    What I wrote down for my day to day tasks is to make sure
+    &lt;a href=&quot;http://be2.php.net/opcache&quot; target=&quot;_blank&quot;&gt;Zend OPcache&lt;/a&gt;
+    is enabled on production environments.
+&lt;/p&gt;
+
+&lt;h2&gt;Day 2:&lt;/h2&gt;
+
+&lt;h3&gt;Models and Service Layers; Hemoglobin and Hobgoblins&lt;/h3&gt;
+
+&lt;p&gt;
+    It was still early in the morning and apparently nobody had it's first coffee yet.
+    Anyway, the first talk of the day, with a rather strange title, was given to us by a rather strange headed guy named
+    &lt;a href=&quot;http://rosstuck.com/&quot; target=&quot;_blank&quot;&gt;Ross Tuck&lt;/a&gt;.
+    He prepared some great slides for us, in which he warned us that he had an average of 1 slide per 14 seconds.
+    The talk itself turned out to be about Domain Design Patterns.
+    By showing some easy examples, he explained why you should be using fat model / skinny services,
+    &lt;a href=&quot;http://martinfowler.com/bliki/CQRS.html&quot; target=&quot;_blank&quot;&gt;CQRS&lt;/a&gt; and
+    &lt;a href=&quot;http://martinfowler.com/eaaDev/EventSourcing.html&quot; target=&quot;_blank&quot;&gt;Event Sourcing&lt;/a&gt;.
+    This was a very enlightening talk for the project I am currently working on.
+&lt;/p&gt;
+
+&lt;h3&gt;Moving Away from Legacy code with BDD&lt;/h3&gt;
+
+&lt;p&gt;
+    This was one of the talks I really looked forward to, given by
+    &lt;a href=&quot;http://everzet.com/&quot; target=&quot;_blank&quot;&gt;Konstantin Kudryashov&lt;/a&gt; (aka everzet).
+    As a BDD evangelist, he explained why it is better to promise less features, but more business value to a customer.
+    This can be done with a BDD-Pipeline in which we handle some stages before starting refactoring the code:
+    &lt;ul&gt;
+        &lt;li&gt;&lt;a href=&quot;http://impactmapping.org/&quot; target=&quot;_blank&quot;&gt;Impact Mapping&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;Feature mapping&lt;/li&gt;
+        &lt;li&gt;Order the tasks by role and benefit&lt;/li&gt;
+        &lt;li&gt;Describe features into example scenarios&lt;/li&gt;
+        &lt;li&gt;Describe, Implement, Design&lt;/li&gt;
+    &lt;/ul&gt;
+    The last 2 steps is where
+    &lt;a href=&quot;http://behat.org/&quot; target=&quot;_blank&quot;&gt;Behat&lt;/a&gt; and
+    &lt;a href=&quot;http://www.phpspec.net/&quot; target=&quot;_blank&quot;&gt;Phpspec&lt;/a&gt; come into play.
+    Some really nice testing tools, to describe and validate how your application and models should behave.
+&lt;/p&gt;
+
+&lt;h3&gt;Maximising Performance in ZF2&lt;/h3&gt;
+
+&lt;p&gt;
+    Another talk on my TODO list was this one, brought to us by
+    &lt;a href=&quot;http://blog.hock.in/&quot; target=&quot;_blank&quot;&gt;Gary Hockin&lt;/a&gt;.
+    In the first part he told us how he benchmarks and profiles his ZF2 applications.
+    This was mainly with the tools
+    &lt;a href=&quot;http://www.joedog.org/siege-home/&quot; target=&quot;_blank&quot;&gt;Siege&lt;/a&gt; and
+    &lt;a href=&quot;http://xdebug.org/&quot; target=&quot;_blank&quot;&gt;Xdebug&lt;/a&gt;.
+    Next he gave us some very helpful tips on how to increase performance in ZF2:
+    &lt;ul&gt;
+        &lt;li&gt;Use &lt;a href=&quot;https://github.com/EvanDotPro/EdpSuperluminal&quot; target=&quot;_blank&quot;&gt;EdpSuperLuminal&lt;/a&gt; on production&lt;/li&gt;
+        &lt;li&gt;Turn on Zend Opcode caching on production.&lt;/li&gt;
+        &lt;li&gt;Do not place closures in config file, place them in the Module.php file.&lt;/li&gt;
+        &lt;li&gt;
+            Place popular routes in the and of your configuration.
+            The router is a LIFO stack.
+            Note: Take care of module order.
+        &lt;/li&gt;
+        &lt;li&gt;
+            Use View template maps in production instead of the template_view_stack.
+            This can be done with the default templatemap_generator.php, shipped with zend.
+        &lt;/li&gt;
+        &lt;li&gt;Minimize the use of the shared event manager.&lt;/li&gt;
+        &lt;li&gt;Cache big datasets.&lt;/li&gt;
+        &lt;li&gt;Add default files like favicon.ico, robots.txt, ... to make sure ZF2 does not get bootstrapped on request.&lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/p&gt;
+
+&lt;h3&gt;Uncon: Feature branches &amp;amp; PR’s&lt;/h3&gt;
+
+&lt;p&gt;
+    This year, there was also an Uncon going on at PHPBenelux. The first session I followed, was a small talk about
+    &lt;a href=&quot;https://github.com/pascaldevink/phlybox&quot; target=&quot;_blank&quot;&gt;PhlyBox&lt;/a&gt; by
+    &lt;a href=&quot;http://privatevoid.nl/&quot; target=&quot;_blank&quot;&gt;Pascal de Vink&lt;/a&gt;.
+    At this moment, the tool doesn't do much. It is just a PoC for something that might become powerfull.
+    It is designed to make it easier to deploy feature branches to a specific environment.
+    I have thought about the concept myself, but don't think this is the way to go.
+    Basically, the tool spawns new vagrant boxes with a custom branch as source.
+    I think it would be easier to use a tool like
+    &lt;a href=&quot;https://npmjs.org/package/grunt-git&quot;&gt;grunt-git&lt;/a&gt;
+    to clone a branch to a specific directory and create a new VirtualHost that will redirect to the branch.
+    Then the only thing that remains a problem, is running database migrations.
+    So, I guess there is still a lot of stuff to think through.
+&lt;/p&gt;
+
+&lt;h3&gt;Uncon: Queue your work; about job queues and abstraction layers&lt;/h3&gt;
+
+&lt;p&gt;
+    The next part of the Uncon was a talk about Queueing and Messaging systems in PHP, brought to us by
+    &lt;a href=&quot;https://juriansluiman.nl/&quot; target=&quot;_blank&quot;&gt;Jurian Sluiman&lt;/a&gt;.
+    All the actions that users don't need to be aware of, should be done asynchronous.
+    This way, you can deliver the content to the user in no time and let the
+    server do the other jobs when there are resources to do the task.
+    A good way to do this kind of asynchronous data handling, is by using queue deamons like
+    &lt;a href=&quot;http://gearman.org/&quot; target=&quot;_blank&quot;&gt;Gearman&lt;/a&gt; or
+    &lt;a href=&quot;http://kr.github.io/beanstalkd/&quot;&gt;Beanstalkd&lt;/a&gt;.
+    A Job Server will remember what tasks that need to be done and a Job Worker will
+    handle the actions and give a response to the Task Server.
+    When you need more control over the Messaging, you can use a Messaging Queues like
+    &lt;a href=&quot;http://zeromq.org/&quot; target=&quot;_blank&quot;&gt;ZeroMQ&lt;/a&gt; or
+    &lt;a href=&quot;http://www.rabbitmq.com/&quot; target=&quot;_blank&quot;&gt;RabbitMQ&lt;/a&gt;.
+    This was a really interesting topic.
+    I can't wait to add this asynchronous queues into a next project.
+&lt;/p&gt;
+
+&lt;h3&gt;Extract Till You Drop&lt;/h3&gt;
+
+&lt;p&gt;
+    The last talk was about extracting legacy code.
+    &lt;a href=&quot;http://verraes.net/&quot; target=&quot;_blank&quot;&gt;Mathias Verraes&lt;/a&gt;
+    gave us a live demo, a bit similar to the talk of Benjamin Eberlei.
+    It was great to watch how Mathias used all the build-in
+    &lt;a href=&quot;http://www.jetbrains.com/phpstorm/&quot; target=&quot;_blank&quot;&gt;PhpStorm&lt;/a&gt;
+    refactoring macro's.
+    He also had a very interesting way in naming stuff. Exactly what you would expect from a DDD evangelist!
+    The tests ran in PHPUnit, but had a BDD like structure. It looked like a mixture of PhpUnit, PhpSpec And Behat.
+&lt;/p&gt;
+
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;
+    PHPBenlux was, again, a great conference.
+    It's amazing to see how the sessions and socials improve every year.
+    To all the organizers: keep up the good work!
+    I hope to be there again next year.
+&lt;/p&gt;
+</content>
+    </entry>
     
     <entry>
         <title>Validating your PHP code on the fly</title>
@@ -83,26 +279,25 @@
 
 &lt;p&gt;&lt;strong&gt;composer.json&lt;/strong&gt;&lt;/p&gt;
 
-&lt;pre class=&quot;prettyprint lang-js&quot;&gt;
-{
-    &quot;name&quot;: &quot;veewee/validating-on-the-fly&quot;,
-    &quot;require&quot;: {
-        &quot;zendframework/zendframework&quot;: &quot;2.*&quot;,
-    },
-    &quot;require-dev&quot;: {
-        &quot;phpspec/phpspec&quot;: &quot;dev-master&quot;,
-        &quot;fabpot/PHP-CS-Fixer&quot;: &quot;*&quot;,
-    },
-    &quot;minimum-stability&quot;: &quot;dev&quot;,
-    &quot;prefer-stable&quot;: true,
-    &quot;autoload&quot;: {
-        &quot;psr-0&quot;: {
-          &quot;Export&quot;: &quot;module/Export/src/&quot;,
-          &quot;Import&quot;: &quot;module/Import/src/&quot;
-        }
-    }
-}
-&lt;/pre&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;js&quot;&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;veewee/validating-on-the-fly&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&amp;quot;require&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;s2&quot;&gt;&amp;quot;zendframework/zendframework&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;2.*&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&amp;quot;require-dev&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;s2&quot;&gt;&amp;quot;phpspec/phpspec&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;dev-master&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;s2&quot;&gt;&amp;quot;fabpot/PHP-CS-Fixer&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;*&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&amp;quot;minimum-stability&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;dev&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&amp;quot;prefer-stable&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&amp;quot;autoload&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;s2&quot;&gt;&amp;quot;psr-0&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+          &lt;span class=&quot;s2&quot;&gt;&amp;quot;Export&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;module/Export/src/&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+          &lt;span class=&quot;s2&quot;&gt;&amp;quot;Import&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;module/Import/src/&amp;quot;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;
     As you can see, composer will download Zend Framework 2 to the vendor directory.
@@ -111,9 +306,8 @@
     To download and install all the dependencies, one command is being used:
 &lt;/p&gt;
 
-&lt;pre class=&quot;prettyprint lang-sh&quot;&gt;
-~$ composer install --dev --prefer-dist
-&lt;/pre&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;sh&quot;&gt;~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;composer install --dev --prefer-dist
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;h2&gt;Configuring phpspec&lt;/h2&gt;
 
@@ -133,29 +327,27 @@
 
 &lt;p&gt;&lt;strong&gt;phpspec.yml&lt;/strong&gt;&lt;/p&gt;
 
-&lt;pre class=&quot;prettyprint lang-yml&quot;&gt;
-formatter.name: dot
-suites:
-  Export:
-    namespace: Export
-    src_path: 'module/Export/src/'
-    spec_path: 'module/Export/'
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;yaml&quot;&gt;&lt;span class=&quot;l-Scalar-Plain&quot;&gt;formatter.name&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;dot&lt;/span&gt;
+&lt;span class=&quot;l-Scalar-Plain&quot;&gt;suites&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;l-Scalar-Plain&quot;&gt;Export&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;l-Scalar-Plain&quot;&gt;namespace&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;Export&lt;/span&gt;
+    &lt;span class=&quot;l-Scalar-Plain&quot;&gt;src_path&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;module/Export/src/&amp;#39;&lt;/span&gt;
+    &lt;span class=&quot;l-Scalar-Plain&quot;&gt;spec_path&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;module/Export/&amp;#39;&lt;/span&gt;
 
-  Import:
-    namespace: Import
-    src_path: 'module/Import/src/'
-    spec_path: 'module/Import/'
-&lt;/pre&gt;
+  &lt;span class=&quot;l-Scalar-Plain&quot;&gt;Import&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;l-Scalar-Plain&quot;&gt;namespace&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;Import&lt;/span&gt;
+    &lt;span class=&quot;l-Scalar-Plain&quot;&gt;src_path&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;module/Import/src/&amp;#39;&lt;/span&gt;
+    &lt;span class=&quot;l-Scalar-Plain&quot;&gt;spec_path&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;module/Import/&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;
     One of the downsides of Phpspec is that, at the moment, you can not run suites based on suite name.
     To test this configuration, you can run following commands:
 &lt;/p&gt;
 
-&lt;pre class=&quot;prettyprint lang-sh&quot;&gt;
-~$ ./vendor/bin/phpspec run module/Export/src
-~$ ./vendor/bin/phpspec run module/Import/src
-&lt;/pre&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;sh&quot;&gt;~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;./vendor/bin/phpspec run module/Export/src
+~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;./vendor/bin/phpspec run module/Import/src
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;h2&gt;Configuring php-cs-fixer&lt;/h2&gt;
 
@@ -175,29 +367,27 @@ suites:
     &lt;strong&gt;.php_cs&lt;/strong&gt;
 &lt;/p&gt;
 
-&lt;pre class=&quot;prettyprint lang-php&quot;&gt;
-&amp;lt;?php
-$finder = Symfony\CS\Finder\DefaultFinder::create()
-    -&gt;exclude('language')
-    -&gt;exclude('view')
-    -&gt;exclude('config')
-    -&gt;in(__DIR__ . '/src')
-    -&gt;in(__DIR__ . '/spec');
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;php&quot;&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?php&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$finder&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Symfony\CS\Finder\DefaultFinder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;create&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;exclude&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;language&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;exclude&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;view&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;exclude&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;config&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;in&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;__DIR__&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;/src&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;in&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;__DIR__&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;/spec&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
 
-$config = Symfony\CS\Config\Config::create();
-$config-&gt;fixers(Symfony\CS\FixerInterface::PSR2_LEVEL);
-$config-&gt;finder($finder);
-return $config;
-&lt;/pre&gt;
+&lt;span class=&quot;nv&quot;&gt;$config&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Symfony\CS\Config\Config&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;create&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$config&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;fixers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Symfony\CS\FixerInterface&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;PSR2_LEVEL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$config&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;finder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$finder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;
     To test this configuration, you can run following commands:
 &lt;/p&gt;
 
-&lt;pre class=&quot;prettyprint lang-sh&quot;&gt;
-~$ ./vendor/bin/php-cs-fixer fix module/Export --dry-run
-~$ ./vendor/bin/php-cs-fixer fix module/Import --dry-run
-&lt;/pre&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;sh&quot;&gt;~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;./vendor/bin/php-cs-fixer fix module/Export --dry-run
+~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;./vendor/bin/php-cs-fixer fix module/Import --dry-run
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;h2&gt;Automate the testing process&lt;/h2&gt;
 
@@ -234,29 +424,27 @@ return $config;
     Here is the sample configuration for the current project:
 &lt;/p&gt;
 
-&lt;pre class=&quot;prettyprint lang-js&quot;&gt;
-phpspec: {
-  options: {
-    prefix: './vendor/bin/'
-  },
-  export: {
-    specs: 'module/Export/src'
-  },
-  import: {
-    specs: 'module/Import/src'
-  }
-}
-&lt;/pre&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;js&quot;&gt;&lt;span class=&quot;nx&quot;&gt;phpspec&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;prefix&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;./vendor/bin/&amp;#39;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;export&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;specs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;module/Export/src&amp;#39;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;import&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;specs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;module/Import/src&amp;#39;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;
     To run spec tests, you can use following commands:
 &lt;/p&gt;
 
-&lt;pre class=&quot;prettyprint lang-sh&quot;&gt;
-~$ grunt phpspec
-~$ grunt phpspec:export
-~$ grunt phpspec:import
-&lt;/pre&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;sh&quot;&gt;~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;grunt phpspec
+~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;grunt phpspec:export
+~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;grunt phpspec:import
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;h3&gt;Grunt-php-cs-fixer&lt;/h3&gt;
 
@@ -269,44 +457,42 @@ phpspec: {
     Here is the sample configuration for the current project:
 &lt;/p&gt;
 
-&lt;pre class=&quot;prettyprint lang-js&quot;&gt;
-// Place this parameter before grunt.initConfig() method:
-var fixCs = grunt.option('fixcs') || false;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;js&quot;&gt;&lt;span class=&quot;c1&quot;&gt;// Place this parameter before grunt.initConfig() method:&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;fixCs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;grunt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;option&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;fixcs&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 
-// Place this configuration in grunt.initConfig() method:
-phpcsfixer: {
-  options: {
-    bin: 'vendor/bin/php-cs-fixer',
-    verbose: true,
-    dryRun: !fixCs,
-    ignoreExitCode: fixCs,
-    level: 'psr2',
-    standard: 'Zend'
-  },
-  export: {
-    dir: 'module/Export'
-  },
-  import: {
-    dir: 'module/Import'
-  }
-}
-&lt;/pre&gt;
+&lt;span class=&quot;c1&quot;&gt;// Place this configuration in grunt.initConfig() method:&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;phpcsfixer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;bin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;vendor/bin/php-cs-fixer&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;verbose&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;dryRun&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;fixCs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;ignoreExitCode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;fixCs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;level&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;psr2&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;standard&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Zend&amp;#39;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;export&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;dir&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;module/Export&amp;#39;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;import&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;dir&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;module/Import&amp;#39;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;
     To run the cs fixer, you can use following commands:
 &lt;/p&gt;
 
-&lt;pre class=&quot;prettyprint lang-sh&quot;&gt;
-// Validating:
-~$ grunt phpcsfixer
-~$ grunt phpcsfixer:export
-~$ grunt phpcsfixer:import
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;sh&quot;&gt;&lt;span class=&quot;c&quot;&gt;# Validating:&lt;/span&gt;
+~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;grunt phpcsfixer
+~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;grunt phpcsfixer:export
+~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;grunt phpcsfixer:import
 
-// Fixing
-~$ grunt phpcsfixer --fixcs
-~$ grunt phpcsfixer:export --fixcs
-~$ grunt phpcsfixer:import --fixcs
-&lt;/pre&gt;
+&lt;span class=&quot;c&quot;&gt;# Fixing:&lt;/span&gt;
+~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;grunt phpcsfixer --fixcs
+~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;grunt phpcsfixer:export --fixcs
+~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;grunt phpcsfixer:import --fixcs
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;h3&gt;Grunt-Phplint&lt;/h3&gt;
 
@@ -319,22 +505,20 @@ phpcsfixer: {
     Here is the sample configuration for the current project:
 &lt;/p&gt;
 
-&lt;pre class=&quot;prettyprint lang-js&quot;&gt;
-phplint: {
-  export: ['module/Export/**/*.php'],
-  import: ['module/Import/**/*.php']
-}
-&lt;/pre&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;js&quot;&gt;&lt;span class=&quot;nx&quot;&gt;phplint&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;export&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;module/Export/**/*.php&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;import&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;module/Import/**/*.php&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;
     To run PHP lint, you can use following commands:
 &lt;/p&gt;
 
-&lt;pre class=&quot;prettyprint lang-sh&quot;&gt;
-~$ grunt phplint
-~$ grunt phplint:export
-~$ grunt phplint:import
-&lt;/pre&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;sh&quot;&gt;~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;grunt phplint
+~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;grunt phplint:export
+~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;grunt phplint:import
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;h3&gt;Grunt-watch&lt;/h3&gt;
 
@@ -350,26 +534,24 @@ phplint: {
     Here is the sample configuration for the current project:
 &lt;/p&gt;
 
-&lt;pre class=&quot;prettyprint lang-js&quot;&gt;
-watch: {
-  export: {
-    files: ['module/Export/**/*.php'],
-    tasks: ['phplint:export', 'phpcsfixer:export', 'phpspec:export']
-  },
-  import: {
-    files: ['module/Import/**/*.php'],
-    tasks: ['phplint:import', 'phpcsfixer:import', 'phpspec:import']
-  }
-},
-&lt;/pre&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;js&quot;&gt;&lt;span class=&quot;nx&quot;&gt;watch&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;export&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;files&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;module/Export/**/*.php&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;tasks&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;phplint:export&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;phpcsfixer:export&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;phpspec:export&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;import&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;files&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;module/Import/**/*.php&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;tasks&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;phplint:import&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;phpcsfixer:import&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;phpspec:import&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;
     To start the watcher and automate the tests, you only have to use one command:
 &lt;/p&gt;
 
-&lt;pre class=&quot;prettyprint lang-sh&quot;&gt;
-~$ grunt watch
-&lt;/pre&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;sh&quot;&gt;~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;grunt watch
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;h3&gt;Run all tests in one&lt;/h3&gt;
 
@@ -378,17 +560,15 @@ watch: {
     Well off course this is possible! It is just one line of configuration:
 &lt;/p&gt;
 
-&lt;pre class=&quot;prettyprint lang-js&quot;&gt;
-grunt.registerTask('test', ['phplint', 'phpcsfixer', 'phpspec']);
-&lt;/pre&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;js&quot;&gt;&lt;span class=&quot;nx&quot;&gt;grunt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;registerTask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;test&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;phplint&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;phpcsfixer&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;phpspec&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;
     To start the complete test, you can use following command:
 &lt;/p&gt;
 
-&lt;pre class=&quot;prettyprint lang-sh&quot;&gt;
-~$ grunt test
-&lt;/pre&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;sh&quot;&gt;~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;grunt &lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;h2&gt;Conclusion&lt;/h2&gt;
 
@@ -466,10 +646,9 @@ grunt.registerTask('test', ['phplint', 'phpcsfixer', 'phpspec']);
     All that it took to let me focus on the lay-out and content, were 2 commands:
 &lt;/p&gt;
 
-&lt;pre class=&quot;prettyprint lang-sh&quot;&gt;
-~$ npm install -g generator-jekyllrb
-~$ yo jekyllrb
-&lt;/pre&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;sh&quot;&gt;~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;npm install -g generator-jekyllrb
+~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;yo jekyllrb
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;h2&gt;Development&lt;/h2&gt;
 
@@ -478,9 +657,8 @@ grunt.registerTask('test', ['phplint', 'phpcsfixer', 'phpspec']);
     Several handy tasks are pre-configured for you to use. For example:
 &lt;/p&gt;
 
-&lt;pre class=&quot;prettyprint lang-sh&quot;&gt;
-~$ grunt serve
-&lt;/pre&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;sh&quot;&gt;~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;grunt serve
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;
     This command will launch the Jekyll server and will rebuild the static website on file changes.
@@ -504,30 +682,27 @@ grunt.registerTask('test', ['phplint', 'phpcsfixer', 'phpspec']);
     I used following configuration which will commit my 'dist' folder of the 'develop' branch to the 'master' branch in git.
 &lt;/p&gt;
 
-&lt;pre class=&quot;prettyprint lang-js&quot;&gt;
-'gh-pages': {
-  options: {
-    base: 'dist',
-    branch: 'master',
-    message: 'Auto-generated build',
-  },
-  src: '**/*'
-}
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;js&quot;&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;gh-pages&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;base&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;dist&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;branch&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;master&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Auto-generated build&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;src&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;**/*&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 
-grunt.registerTask('github-deploy', [
-    'default',
-    'gh-pages'
-]);
-
-&lt;/pre&gt;
+&lt;span class=&quot;nx&quot;&gt;grunt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;registerTask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;github-deploy&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;s1&quot;&gt;&amp;#39;default&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s1&quot;&gt;&amp;#39;gh-pages&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;
     Now, when you want to publish your site, it's just one simple command:
 &lt;/p&gt;
 
-&lt;pre class=&quot;prettyprint lang-sh&quot;&gt;
-~$ grunt github-deploy
-&lt;/pre&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;sh&quot;&gt;~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;grunt github-deploy
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;
     This will first clean up all temporary files and validate your Jekyll site, javascript and compass files.
