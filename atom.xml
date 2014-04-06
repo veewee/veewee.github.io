@@ -3,7 +3,7 @@
     <title>Toon Verwerft - VeeWee</title>
     <link href="http://veewee.github.io/atom.xml" rel="self"/>
     <link href="http://veewee.github.io/"/>
-    <updated>2014-04-06T14:12:53+02:00</updated>
+    <updated>2014-04-06T14:20:06+02:00</updated>
     <id>http://veewee.github.io</id>
     <author>
         <name>Toon Verwerft</name>
@@ -17,27 +17,27 @@
         <updated>2014-04-06T00:00:00+02:00</updated>
         <id>http://veewee.github.io/blog/three-way-data-binding-2014</id>
         <content type="html">&lt;p&gt;One of the cool features in &lt;a href=&quot;http://angularjs.org/&quot; target=&quot;_blank&quot;&gt;AngularJS&lt;/a&gt; is the two-way data binding.
-When you change a property of an object, the value is instantly changed in every view or service that is using this property.
-A while ago, I saw a video about the combination of AngularJS and
-&lt;a href=&quot;https://www.firebase.com/&quot; target=&quot;_blank&quot;&gt;Firebase&lt;/a&gt;.
-This combination makes it possible to create three-way data binding in AngularJS.&lt;/p&gt;
+ When you change a property of an object, the value is instantly changed in every view or service that is using this property.
+ A while ago, I saw a video about the combination of AngularJS and
+ &lt;a href=&quot;https://www.firebase.com/&quot; target=&quot;_blank&quot;&gt;Firebase&lt;/a&gt;.
+ This combination makes it possible to create three-way data binding in AngularJS.&lt;/p&gt;
 
 &lt;h2&gt;What is Firebase?&lt;/h2&gt;
 
 &lt;p&gt;Firebase is an online service that provides an API to store and sync data in realtime.
-This means that when the data is saved, all connected clients will retrieve the latest data without reloading the page.
-You can see Firebase as a database service with some extra features like authentication.
-The cool thing about this service is that you don&amp;#39;t need to create a database schema.
-You can create collections just by specifying a path to the database in the URL.
-An additional package &amp;#39;&lt;a href=&quot;https://www.firebase.com/quickstart/angularjs.html&quot; target=&quot;_blank&quot;&gt;AngularFire&lt;/a&gt;&amp;#39; is available for integration with AngularJS.&lt;/p&gt;
+ This means that when the data is saved, all connected clients will retrieve the latest data without reloading the page.
+ You can see Firebase as a database service with some extra features like authentication.
+ The cool thing about this service is that you don&amp;#39;t need to create a database schema.
+ You can create collections just by specifying a path to the database in the URL.
+ An additional package &amp;#39;&lt;a href=&quot;https://www.firebase.com/quickstart/angularjs.html&quot; target=&quot;_blank&quot;&gt;AngularFire&lt;/a&gt;&amp;#39; is available for integration with AngularJS.&lt;/p&gt;
 
 &lt;h2&gt;The world&amp;#39;s easiest guestbook&lt;/h2&gt;
 
 &lt;h3&gt;Getting started&lt;/h3&gt;
 
 &lt;p&gt;A good way to start a test project is by using &lt;a href=&quot;http://yeoman.io/&quot; target=&quot;_blank&quot;&gt;Yeoman&lt;/a&gt;.
-Both AngularJs and AngularFire have a generator that will create your basic application in no time.
-Just run following commands and follow the wizard:&lt;/p&gt;
+ Both AngularJs and AngularFire have a generator that will create your basic application in no time.
+ Just run following commands and follow the wizard:&lt;/p&gt;
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;sh&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;yo angular
 &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;yo angularfire
@@ -74,8 +74,8 @@ Just run following commands and follow the wizard:&lt;/p&gt;
 &lt;h3&gt;Initializing your firebase collection&lt;/h3&gt;
 
 &lt;p&gt;The AngularFire package provides some ways to interact with Firebase.
-The easiest way to connecto to a collection is by using the syncData service.
-We can create the connection with one line of code:&lt;/p&gt;
+ The easiest way to connecto to a collection is by using the syncData service.
+ We can create the connection with one line of code:&lt;/p&gt;
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;js&quot;&gt;&lt;span class=&quot;nx&quot;&gt;angular&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;module&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;app&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;controller&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;MainCtrl&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;$scope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;syncData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
@@ -88,7 +88,7 @@ We can create the connection with one line of code:&lt;/p&gt;
 &lt;h3&gt;Add a message&lt;/h3&gt;
 
 &lt;p&gt;Now that we set up the connection, we want to add messages to the collection.
-This part is very easy: you just pass a JSON object to the collection:&lt;/p&gt;
+ This part is very easy: you just pass a JSON object to the collection:&lt;/p&gt;
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;js&quot;&gt;&lt;span class=&quot;nx&quot;&gt;$scope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;input&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
@@ -110,8 +110,8 @@ This part is very easy: you just pass a JSON object to the collection:&lt;/p&gt;
 &lt;h3&gt;Sort messages in reverse order&lt;/h3&gt;
 
 &lt;p&gt;When you want to display the messages in reverse order you should create one extra filer called &lt;code&gt;reverse&lt;/code&gt;.
-This filter is allready written in one of the example AngularFire projects.
-&lt;a href=&quot;https://github.com/firebase/angularFire-seed/blob/master/app/js/filters.js&quot; target=&quot;_blank&quot;&gt;You can find the code over here.&lt;/a&gt;&lt;/p&gt;
+ This filter is allready written in one of the example AngularFire projects.
+ &lt;a href=&quot;https://github.com/firebase/angularFire-seed/blob/master/app/js/filters.js&quot; target=&quot;_blank&quot;&gt;You can find the code over here.&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;A quick way to create a custom filter is by using the Yeoman angular:filter generator:&lt;/p&gt;
 
@@ -121,7 +121,7 @@ This filter is allready written in one of the example AngularFire projects.
 &lt;h3&gt;Hosting&lt;/h3&gt;
 
 &lt;p&gt;It is also possible to use Firebase hosting.
-A custom CLI tool is provided an can be installed through NPM:&lt;/p&gt;
+ A custom CLI tool is provided an can be installed through NPM:&lt;/p&gt;
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;sh&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;npm install -g firebase-tools
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
