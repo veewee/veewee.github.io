@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Three-way data binding"
+title:  "Three-way data binding in AngularJS"
 category: general
 tags: angular firebase angularfire
 summary: One of the cool features in AngularJS is the two-way data binding. When you change a property of an object, the value is instantly changed in every view or service that is using this property. A while ago, I saw a video about the combination of AngularJS and Firebase. This combination makes it possible to create three-way data binding in AngularJS.
