@@ -3,7 +3,7 @@
     <title>Toon Verwerft - VeeWee</title>
     <link href="http://veewee.github.io/atom.xml" rel="self"/>
     <link href="http://veewee.github.io/"/>
-    <updated>2014-04-06T14:20:06+02:00</updated>
+    <updated>2014-04-07T09:30:30+02:00</updated>
     <id>http://veewee.github.io</id>
     <author>
         <name>Toon Verwerft</name>
@@ -13,9 +13,9 @@
     
     <entry>
         <title>Three-way data binding</title>
-        <link href="http://veewee.github.io/blog/three-way-data-binding-2014"/>
+        <link href="http://veewee.github.io/blog/three-way-data-binding"/>
         <updated>2014-04-06T00:00:00+02:00</updated>
-        <id>http://veewee.github.io/blog/three-way-data-binding-2014</id>
+        <id>http://veewee.github.io/blog/three-way-data-binding</id>
         <content type="html">&lt;p&gt;One of the cool features in &lt;a href=&quot;http://angularjs.org/&quot; target=&quot;_blank&quot;&gt;AngularJS&lt;/a&gt; is the two-way data binding.
  When you change a property of an object, the value is instantly changed in every view or service that is using this property.
  A while ago, I saw a video about the combination of AngularJS and
