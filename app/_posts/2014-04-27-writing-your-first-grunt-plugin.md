@@ -260,7 +260,7 @@ Once your plugin is ready, you want to place it in GIT.
 
 {% highlight js %}
   "devDependencies": {
-    "grunt-find-bo-translations": "git+ssh://git@bitbucket.org:organization/package.git"
+    "grunt-find-translations": "git+ssh://git@bitbucket.org:organization/package.git"
   }
 {% endhighlight %}
 
