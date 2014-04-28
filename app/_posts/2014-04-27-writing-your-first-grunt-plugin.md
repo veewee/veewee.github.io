@@ -3,7 +3,7 @@ layout: post
 title:  "Writing your first Grunt plugin"
 category: general
 tags: grunt plugin
-summary: For one of my projects, I needed a tool to list all used translations keys from a PHP project. Because I want to keep the translation database clean, I decided to create a Grunt plugin. There was one big problem... How do you create a Grunt plugin? So I started to read the documentation, blog posts, etc. and noticed that the documentation was pretty confusing for beginners like me. Let me take you on a tour through my first plugin.
+summary: For one of my projects, I needed a tool to list all used translations keys from a PHP project. Because I want to keep the translation database clean, I decided to create a Grunt plugin. There was one big problem... How do you create this plugin? So I started to read the documentation, blog posts, etc. and noticed that the documentation was pretty confusing. Let me take you on a tour through my first plugin.
 image: 20140427/grunt.jpg
 thumb: 20140427/thumb-grunt.jpg
 ---
@@ -11,9 +11,9 @@ thumb: 20140427/thumb-grunt.jpg
 For one of my projects, I needed a tool to list all used translations keys from a PHP project.
   Because I want to keep the translation database clean, I decided to create a
   <a href="http://gruntjs.com/" target="_blank">Grunt</a> plugin.
-  There was one big problem: How do you create a Grunt plugin?
+  There was one big problem: How do you create this plugin?
   So I started to read the documentation, some blog posts, etc. and noticed
-  that the documentation was pretty confusing for beginners like me.
+  that the documentation was pretty confusing.
   Let me take you on a tour through my first plugin.
 
 ## Where to start?
@@ -41,7 +41,7 @@ After running this command, all the template files are being copied to your fold
 
 ### Configure NPM
 Once you got through the installation wizard, you should personalize the NPM file.
-  My plugin is heavy project specific, so I decided to make it a private repository.
+  My plugin is project specific, so I decided to make it a private repository.
   I also like using
   <a href="http://lodash.com/" target="_blank">Lo-Dash</a>
   for handling arrays, so I added this one as a dependency of the plugin.
@@ -54,7 +54,8 @@ Once you got through the installation wizard, you should personalize the NPM fil
   },
 {% endhighlight %}
 
-When the configuration is saved, the next step is to install the dependencies. This can be done by running the command:
+When the configuration is saved, the next step is to install the dependencies.
+  This can be done by running the command:
 
 {% highlight sh %}
 $ npm install
