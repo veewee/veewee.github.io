@@ -3,7 +3,7 @@
     <title>Toon Verwerft - VeeWee</title>
     <link href="http://veewee.github.io/atom.xml" rel="self"/>
     <link href="http://veewee.github.io/"/>
-    <updated>2014-04-27T18:20:18+02:00</updated>
+    <updated>2014-04-28T09:54:56+02:00</updated>
     <id>http://veewee.github.io</id>
     <author>
         <name>Toon Verwerft</name>
@@ -19,9 +19,9 @@
         <content type="html">&lt;p&gt;For one of my projects, I needed a tool to list all used translations keys from a PHP project.
   Because I want to keep the translation database clean, I decided to create a
   &lt;a href=&quot;http://gruntjs.com/&quot; target=&quot;_blank&quot;&gt;Grunt&lt;/a&gt; plugin.
-  There was one big problem: How do you create a Grunt plugin?
+  There was one big problem: How do you create this plugin?
   So I started to read the documentation, some blog posts, etc. and noticed
-  that the documentation was pretty confusing for beginners like me.
+  that the documentation was pretty confusing.
   Let me take you on a tour through my first plugin.&lt;/p&gt;
 
 &lt;h2&gt;Where to start?&lt;/h2&gt;
@@ -50,7 +50,7 @@
 &lt;h3&gt;Configure NPM&lt;/h3&gt;
 
 &lt;p&gt;Once you got through the installation wizard, you should personalize the NPM file.
-  My plugin is heavy project specific, so I decided to make it a private repository.
+  My plugin is project specific, so I decided to make it a private repository.
   I also like using
   &lt;a href=&quot;http://lodash.com/&quot; target=&quot;_blank&quot;&gt;Lo-Dash&lt;/a&gt;
   for handling arrays, so I added this one as a dependency of the plugin.
@@ -62,7 +62,8 @@
   &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;When the configuration is saved, the next step is to install the dependencies. This can be done by running the command:&lt;/p&gt;
+&lt;p&gt;When the configuration is saved, the next step is to install the dependencies.
+  This can be done by running the command:&lt;/p&gt;
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;sh&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;npm install
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
