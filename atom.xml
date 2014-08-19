@@ -3,13 +3,91 @@
     <title>Toon Verwerft - VeeWee</title>
     <link href="http://veewee.github.io/atom.xml" rel="self"/>
     <link href="http://veewee.github.io/"/>
-    <updated>2014-04-28T09:54:56+02:00</updated>
+    <updated>2014-08-19T17:59:33+02:00</updated>
     <id>http://veewee.github.io</id>
     <author>
         <name>Toon Verwerft</name>
         <uri>http://veewee.github.io/</uri>
         <email>toonverwerft@gmail.com</email>
     </author>
+    
+    <entry>
+        <title>Generating ZF2 template maps on the fly</title>
+        <link href="http://veewee.github.io/blog/generating-zf2-template-maps-on-the-fly"/>
+        <updated>2014-08-19T00:00:00+02:00</updated>
+        <id>http://veewee.github.io/blog/generating-zf2-template-maps-on-the-fly</id>
+        <content type="html">&lt;p&gt;
+    One of the performance boosters in
+     &lt;a href=&quot;http://framework.zend.com/&quot; target=&quot;_blank&quot;&gt;Zend Framework 2&lt;/a&gt;
+     is using `template_map` instead of the `template_path_stack` in the view manager.
+     While developing, it is easier to use the stack.
+     This is because you don&#39;t have to add a mapping every time you create a new view.
+     At the end of the development you might forget to transform the stack into a template map.
+     This is why it is useful to &lt;strong&gt;never&lt;/strong&gt; use the stack and automate the generation of the template_map array instead.
+&lt;/p&gt;
+
+&lt;p&gt;
+    There is already a great tool called
+     `&lt;a href=&quot;https://github.com/zendframework/zf2/blob/master/bin/templatemap_generator.php&quot; target=&quot;_blank&quot;&gt;templatemap_generator.php&lt;/a&gt;`
+     included in the bin folder of zf2.
+     It can be used to generate a template map for every module in your application.
+     In the next step, we want to make sure that this tool is called every time a view file is created.
+     This kind of automation can be done with a task manager like
+     `&lt;a href=&quot;http://gruntjs.com/&quot; target=&quot;_blank&quot;&gt;Grunt&lt;/a&gt;`.
+&lt;/p&gt;
+
+&lt;h2&gt;Sample configuration&lt;/h2&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;js&quot;&gt;&lt;span class=&quot;nx&quot;&gt;grunt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;initConfig&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
+
+    &lt;span class=&quot;nx&quot;&gt;phplint&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;applicationViews&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;module/Application/**/*.phtml&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;nx&quot;&gt;watch&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;applicationViews&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;files&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;module/Application/view/**/*.phtml&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;tasks&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;phplint:applicationViews&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;exec:generate_application_template_map&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+
+    &lt;span class=&quot;nx&quot;&gt;exec&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;generate_application_template_map&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;cmd&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;../../vendor/bin/templatemap_generator.php&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;cwd&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;module/Application&amp;#39;&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;grunt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;registerTask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;generate-template-maps&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;exec:template_map_application&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+    By using this configuration, Grunt will watch for file changes in the `view` folder of the `Application` module.
+     When a file has changed, PHPLint will check for syntax errors and finally a new template map file will be generated.
+     There is also a command named `generate-template-maps` which you can run manually.
+&lt;/p&gt;
+
+&lt;p&gt;
+    &lt;em&gt;
+        &lt;strong&gt;Note:&lt;/strong&gt;
+        Make sure to include the npm packages
+        &lt;a href=&quot;https://www.npmjs.org/package/grunt-exec&quot; target=&quot;_blank&quot;&gt;grunt-exec&lt;/a&gt;
+        and
+        &lt;a href=&quot;https://npmjs.org/package/grunt-phplint&quot; target=&quot;_blank&quot;&gt;grunt-phplint&lt;/a&gt;.
+    &lt;/em&gt;
+&lt;/p&gt;
+
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;
+    By automating all of the boring tasks, you can gain a lot of time during development.
+     If you want to automate some more tasks during PHP development, you can check an earlier blog called
+     `&lt;a href=&quot;http://veewee.github.io/blog/validating-your-php-code-on-the-fly/&quot;&gt;Validating your PHP code on the fly&lt;/a&gt;`.
+&lt;/p&gt;
+</content>
+    </entry>
     
     <entry>
         <title>Writing your first Grunt plugin</title>
