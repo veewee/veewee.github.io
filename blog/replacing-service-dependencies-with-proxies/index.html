@@ -75,7 +75,7 @@
         <span class=nv>$dynamicDocumentManager</span><span class=o>-&gt;</span><span class=na>setCurrentManager</span><span class=p>(</span><span class=nv>$currentDocumentManager</span><span class=p>);</span>
 
         <span class=nv>$proxy</span> <span class=o>=</span> <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>proxyFactory</span><span class=o>-&gt;</span><span class=na>createProxy</span><span class=p>(</span>
-            <span class=s1>&#39;Doctrine\Common\Persistence\DocumentManager&#39;</span><span class=p>,</span>
+            <span class=s1>&#39;Doctrine\ODM\MongoDB\DocumentManager&#39;</span><span class=p>,</span>
             <span class=k>function</span> <span class=p>(</span><span class=o>&amp;</span> <span class=nv>$wrappedObject</span><span class=p>)</span> <span class=k>use</span> <span class=p>(</span><span class=nv>$dynamicDocumentManager</span><span class=p>)</span> <span class=p>{</span>
                 <span class=nv>$wrappedObject</span> <span class=o>=</span> <span class=nv>$dynamicDocumentManager</span><span class=o>-&gt;</span><span class=na>getCurrentManager</span><span class=p>();</span>
                 <span class=k>return</span> <span class=k>false</span><span class=p>;</span>
