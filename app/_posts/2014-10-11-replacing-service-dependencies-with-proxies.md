@@ -162,7 +162,7 @@ class DocumentManagerProxyDelegator implements DelegatorFactoryInterface
         $dynamicDocumentManager->setCurrentManager($currentDocumentManager);
 
         $proxy = $this->proxyFactory->createProxy(
-            'Doctrine\Common\Persistence\DocumentManager',
+            'Doctrine\ODM\MongoDB\DocumentManager',
             function (& $wrappedObject) use ($dynamicDocumentManager) {
                 $wrappedObject = $dynamicDocumentManager->getCurrentManager();
                 return false;
