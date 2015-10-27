@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Hijacking your code on runtime with streams"
+title:  "Hijacking your code with streams"
 category: general
 tags: blog streams
 summary: Lately, you might have noticed that streams are getting more important in the PHP scene. They are for example widely used in PSR-7 and implemented in Diactoros. Yesterday I was scrolling down the issues list of phpspec and bumped in on a pull request. This pull request shows that it is possible to convert code in-memory and later require the modified content to be executed. Wow, that is awesome! Let's take a look at it.
