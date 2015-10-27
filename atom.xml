@@ -3,7 +3,7 @@
     <title>Toon Verwerft - VeeWee</title>
     <link href="http://veewee.github.io/atom.xml" rel="self"/>
     <link href="http://veewee.github.io/"/>
-    <updated>2015-10-26T21:24:47+01:00</updated>
+    <updated>2015-10-27T12:34:42+01:00</updated>
     <id>http://veewee.github.io</id>
     <author>
         <name>Toon Verwerft</name>
@@ -30,9 +30,9 @@
 &lt;h2&gt;The concept&lt;/h2&gt;
 
 &lt;p&gt;
-    You probably already used some build-in PHP streams like regular files, `php://memory` or `data://...` 
+    You probably already used some built-in PHP streams like regular files, `php://memory` or `data://...` 
     in combination with the `fopen()` method or the `StdFileObject` class.
-    Beside those build-in streams, it is possible to configure your own stream wrappers.
+    Beside those built-in streams, it is possible to configure your own stream wrappers.
     For this post I will be creating a blacklist stream that will remove blacklisted methods from your code.
     The blacklist stream wrapper will read a PHP file and replaces blacklisted methods from the code.
     When the file is required through the blacklist wrapper, all blacklisted methods will be removed from the code.
