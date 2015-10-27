@@ -21,9 +21,9 @@ thumb: 20151026/thumb-hijacking.jpg
 
 ## The concept
 <p>
-    You probably already used some build-in PHP streams like regular files, `php://memory` or `data://...` 
+    You probably already used some built-in PHP streams like regular files, `php://memory` or `data://...` 
     in combination with the `fopen()` method or the `StdFileObject` class.
-    Beside those build-in streams, it is possible to configure your own stream wrappers.
+    Beside those built-in streams, it is possible to configure your own stream wrappers.
     For this post I will be creating a blacklist stream that will remove blacklisted methods from your code.
     The blacklist stream wrapper will read a PHP file and replaces blacklisted methods from the code.
     When the file is required through the blacklist wrapper, all blacklisted methods will be removed from the code.
