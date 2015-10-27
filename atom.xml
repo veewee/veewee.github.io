@@ -3,7 +3,7 @@
     <title>Toon Verwerft - VeeWee</title>
     <link href="http://veewee.github.io/atom.xml" rel="self"/>
     <link href="http://veewee.github.io/"/>
-    <updated>2015-10-27T12:34:42+01:00</updated>
+    <updated>2015-10-27T12:36:13+01:00</updated>
     <id>http://veewee.github.io</id>
     <author>
         <name>Toon Verwerft</name>
@@ -12,10 +12,10 @@
     </author>
     
     <entry>
-        <title>Hijacking your code on runtime with streams</title>
-        <link href="http://veewee.github.io/blog/converting-code-in-memory-with-streams"/>
+        <title>Hijacking your code with streams</title>
+        <link href="http://veewee.github.io/blog/hijacking-your-code-with-streams"/>
         <updated>2015-10-26T00:00:00+01:00</updated>
-        <id>http://veewee.github.io/blog/converting-code-in-memory-with-streams</id>
+        <id>http://veewee.github.io/blog/hijacking-your-code-with-streams</id>
         <content type="html">&lt;p&gt;
     Lately, you might have noticed that streams are getting more important in the PHP scene.
     They are for example widely used in 
