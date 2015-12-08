@@ -3,13 +3,274 @@
     <title>Toon Verwerft - VeeWee</title>
     <link href="http://veewee.github.io/atom.xml" rel="self"/>
     <link href="http://veewee.github.io/"/>
-    <updated>2015-10-27T12:36:13+01:00</updated>
+    <updated>2015-12-08T18:06:52+01:00</updated>
     <id>http://veewee.github.io</id>
     <author>
         <name>Toon Verwerft</name>
         <uri>http://veewee.github.io/</uri>
         <email>toonverwerft@gmail.com</email>
     </author>
+    
+    <entry>
+        <title>Authenticating with X.509 client certificates</title>
+        <link href="http://veewee.github.io/blog/authenticating-with-x509-client-certificates"/>
+        <updated>2015-12-07T00:00:00+01:00</updated>
+        <id>http://veewee.github.io/blog/authenticating-with-x509-client-certificates</id>
+        <content type="html">&lt;p&gt;
+    Last week, I was diving in different authentication systems for API&#39;s.
+    One of the better authentication types is authentication through &lt;a href=&quot;https://en.wikipedia.org/wiki/X.509&quot; target=&quot;_blank&quot;&gt;X.509 client certificates&lt;/a&gt;.
+    This type of authentication is harder to set-up, but sure is secure, managaeble and powerfull.
+    While searching for documentation on the subject, I was surprised there weren&#39;t a lot of good articles.
+    In this article, I will try to explain every step as easy as possible.
+&lt;/p&gt;
+
+&lt;h2&gt;Why should I use X.509 authentication?&lt;/h2&gt;
+
+&lt;p&gt;
+    The main advantage is that the client is not sending a username or password to the server. 
+    This means that a man-in-the-middle attack is nearly impossible. 
+    It is much easier to steal a username/password login, for example by bruteforcing, then stealing a certificate.
+    Because the certificate is signed, it is only possible to connect to the real server.
+    It is possible to revoke and manage these certificates in an easy way.
+&lt;/p&gt;
+
+&lt;h2&gt;Configuring the server&lt;/h2&gt;
+
+&lt;p&gt;
+    Client Certificate authentication can only be done while running HTTPS.
+    So first of all, make sure the server is running HTTPS. 
+    This can be done with a self-signed or a signed certificate.
+    The creation of this certificate is not part of this article.
+    Your apache vhost configuration should look more or less like this:
+&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;apache&quot;&gt;&lt;span class=&quot;nb&quot;&gt;SSLEngine&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;on&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;SSLCertificateFile&lt;/span&gt;      &lt;span class=&quot;s2&quot;&gt;&amp;quot;/etc/ssl/certs/server.pem&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;SSLCertificateKeyFile&lt;/span&gt;   &lt;span class=&quot;s2&quot;&gt;&amp;quot;/etc/ssl/private/server.key&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;SSLProtocol&lt;/span&gt;             TLSv1 TLSv1.1 TLSv1.2
+&lt;span class=&quot;nb&quot;&gt;SSLCipherSuite&lt;/span&gt;          &lt;span class=&quot;s2&quot;&gt;&amp;quot;.......&amp;quot;&lt;/span&gt;
+ 
+&lt;span class=&quot;c&quot;&gt;# When using signed certificates:&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;SSLCertificateChainFile&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;/etc/ssl/yourDomainName.ca-bundle&amp;quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;
+    Now that you got HTTPS up and running, you should be able to browse to your application through HTTPS. 
+&lt;/p&gt;
+
+&lt;h3&gt;Creating a certification authority&lt;/h3&gt;
+
+&lt;p&gt;
+    A certification authority (CA) hands out a digital certificate in which the CA says that a public key in the certificate, 
+    belongs to the person, organisation, server or entity that is mentioned in the certificate.
+    In our example, this will be done based on the e-mail address that is provided in the certificate.
+    The task of the CA is to control the identiy of the issuer, so that the client that is using the certificates from the CA can be trust.
+&lt;/p&gt;
+
+&lt;p&gt;
+    First we will need to create the CA private key and certificate:
+&lt;/p&gt;
+
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /etc/ssl/certs/
+openssl genrsa -out ca.key 4096
+openssl req -new -x509 -days 365 -key ca.key -out ca.crt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class=&quot;alert alert-warning&quot;&gt;
+    &lt;strong&gt;Note:&lt;/strong&gt; Make sure to set the CN to a valid server domain. Otherwise this might result in exceptions!
+&lt;/div&gt;
+
+&lt;p&gt;
+    Now that we have the CA key and certificate, we can register it to Apache to validate the client certificates:
+&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;apache&quot;&gt;&lt;span class=&quot;nb&quot;&gt;SSLCACertificateFile&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;/etc/ssl/certs/ca.crt&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;SSLVerifyClient&lt;/span&gt; optional
+&lt;span class=&quot;nb&quot;&gt;SSLVerifyDepth&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;SSLOptions&lt;/span&gt; +StdEnvVars
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;
+    As you can see the client certificate verification is optional. 
+    This will make it possible to add another type of authentication like basic authentication when there is nog client certificate.
+    The verify depth is set to 1 so that it only accepts certificates signed by the configured CA.
+    Finally the StdEnvVars are registered so that the additional SSL server variables are available in PHP.
+&lt;/p&gt;
+
+
+&lt;h2&gt;Configuring the client&lt;/h2&gt;
+
+&lt;p&gt;
+    Now that we got or server fully configured, it is time to create a client certificate.
+    Following commands should be ran on the client machine to create a Certificate Signing Request (CSR):
+&lt;/p&gt;
+
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;openssl genrsa -out client.key 4096
+openssl req -new -key client.key -out client.csr
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class=&quot;alert alert-warning&quot;&gt;
+    &lt;strong&gt;Note:&lt;/strong&gt; Make sure to set the CN to a valid server domain. Otherwise this might result in exceptions!&lt;br /&gt;
+    &lt;strong&gt;Note:&lt;/strong&gt; The email field will be used to authenticate the user.
+&lt;/div&gt;
+
+&lt;p&gt;
+    The CSR file is useless when it is not signed by the CA.
+    So the logical next step is to transfer the certificate to the server and sign it with the CA.
+&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;openssl x509 -req -days 365 -in client.csr -CA ca.crt -CAkey ca.key -set_serial 01 -out client.crt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+
+&lt;p&gt;
+    The command above results in a usefull client certificate. 
+    To make it easier to use the certificate, we will pack the client private key and the certificate in one file.
+    This action should run on the client machine:
+&lt;/p&gt;
+
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;cat client.crt client.key &amp;gt; client.pem
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class=&quot;alert alert-warning&quot;&gt;
+    &lt;strong&gt;Note:&lt;/strong&gt; it&#39;s important to place the crt before the key in the pem file!
+&lt;/div&gt;
+
+&lt;p&gt;
+    In above example the CSR was created on the client, to make it clear that the certificate + key should only be known by the client.
+    However, it is perfectly possible to run all these commands on the server and send the .pem file to the client who will be using the certificate.
+    This means that it is perfectly possible to automate the creation of the client certificates.
+    It is even possible to create your own user interface to make the keys manageable per user of your application.
+    This can for example be done with the built-in &lt;a href=&quot;http://php.net/manual/en/book.openssl.php&quot; target=&quot;_blank&quot;&gt;openssl&lt;/a&gt; extension of PHP.
+&lt;/p&gt;
+
+&lt;h2&gt;Requesting resources with a client certificate&lt;/h2&gt;
+
+&lt;p&gt;
+    Ok, we configured our server and requested a client certificate. 
+    Now how do I use this certificate to get my resources?
+    The easiest way is the add the &quot;&lt;em&gt;-cert&lt;/em&gt;&quot; attribute to the curl command.
+    Since we are using Guzzle for HTTP requests, the client configuration will look like this:
+&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;php&quot;&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?php&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$client&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Guzzle\Http\Client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$baseUrl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;s1&quot;&gt;&amp;#39;ssl.certificate_authority&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;system&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s1&quot;&gt;&amp;#39;request.options&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+        &lt;span class=&quot;s1&quot;&gt;&amp;#39;cert&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;client.pem&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;
+    As you can see it is possible to specify the certificate in the request.options part of the configuration.
+    Another option is the ssl.certificate_authority. This one can be used to specify which CA that should be used. 
+    By default the built-in CA file is being used.
+    You can choose to disable ssl verification or add your own ca file.
+    For example, when using self-signed certificates, you can run following command:
+&lt;/p&gt;
+
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;openssl s_client -showcerts -connect my.host.com:443 &amp;gt; ca-file.pem
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;
+    This ca-file.pem file will contain the certificate of the certification authority and mark it as trusted. 
+    Now it can be used in the PHP configuration as followed:
+&lt;/p&gt;
+
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;php&quot;&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?php&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$client&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Guzzle\Http\Client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$baseUrl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;s1&quot;&gt;&amp;#39;ssl.certificate_authority&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;ca-file.pem&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s1&quot;&gt;&amp;#39;request.options&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+        &lt;span class=&quot;s1&quot;&gt;&amp;#39;cert&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;client.pem&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+
+&lt;h2&gt;X.509 authentication in Symfony&lt;/h2&gt;
+
+&lt;p&gt;
+    One of the less known features of Symfony is X.509 authentication.
+    It can easily be configured with the default x509 authentication security adapter.
+    The configuration is pretty easy:
+&lt;/p&gt;
+
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;yaml&quot;&gt;&lt;span class=&quot;l-Scalar-Plain&quot;&gt;security&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;l-Scalar-Plain&quot;&gt;providers&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;l-Scalar-Plain&quot;&gt;client_certificate&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+            &lt;span class=&quot;l-Scalar-Plain&quot;&gt;memory&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+                &lt;span class=&quot;l-Scalar-Plain&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+                    &lt;span class=&quot;l-Scalar-Plain&quot;&gt;email@certification.file&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+                      &lt;span class=&quot;l-Scalar-Plain&quot;&gt;roles&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;ROLE_SUPER_ADMIN&lt;/span&gt;
+ 
+    &lt;span class=&quot;l-Scalar-Plain&quot;&gt;firewalls&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;l-Scalar-Plain&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+            &lt;span class=&quot;l-Scalar-Plain&quot;&gt;x509&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+                &lt;span class=&quot;l-Scalar-Plain&quot;&gt;provider&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;client_certificate&lt;/span&gt;
+ 
+    &lt;span class=&quot;l-Scalar-Plain&quot;&gt;access_control&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+            &lt;span class=&quot;p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p-Indicator&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;^/&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;roles&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ROLE_SUPER_ADMIN&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;requires_channel&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;https&lt;/span&gt; &lt;span class=&quot;p-Indicator&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class=&quot;alert alert-warning&quot;&gt;
+    &lt;strong&gt;Note:&lt;/strong&gt; This type of authentication only works with HTTPS. You might want to enforce HTTPS!
+&lt;/div&gt;
+
+&lt;p&gt;
+    As you can see HTTPS is enforced and authentication will try X.509 authentication by default.
+    When a valid client certificate is found, 
+    Symfony will try to match the email that is configured inside the certificate with a user in the client_certificate user provider.
+    In this case we are using an in-memory provider that links an e-mail to a security role.
+&lt;/p&gt;
+
+&lt;h2&gt;X.509 authentication in PHP&lt;/h2&gt;
+
+&lt;p&gt;
+    That was easy! But how does it work?
+    By adding the &quot;SSLOptions +StdEnvVars&quot; configuration in Apache, there are some additional &quot;&lt;em&gt;SSL_&lt;/em&gt;&quot; environment variables available.
+    These variables contain the email in the client certificate. For example:
+&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;php&quot;&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?php&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$email&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$_SERVER&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;SSL_CLIENT_S_DN_Email&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$email&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;preg_match&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;#/emailAddress=(.+\@.+\..+)(/|$)#&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$_SERVER&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;SSL_CLIENT_S_DN&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$matches&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$email&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$matches&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+    Now that we have the e-mail, it is possible to search this email in the list of configured client_certificates.
+    Symfony will throw an exception when the email can&#39;t be found.
+&lt;/p&gt;
+
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;
+    Even though it is a lot of work to get this type of authentication running,
+    it sure is a powerful type of authentication. 
+    The users of your application will be able to connect to your application in an improved and secure way. 
+    It also comes in very handy for server to server communication in which you don&#39;t always want to hardcode user credentials.
+    Your customers will surely thank you for the extra effort you made!
+&lt;/p&gt;
+</content>
+    </entry>
     
     <entry>
         <title>Hijacking your code with streams</title>
