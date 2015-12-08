@@ -2,7 +2,7 @@
 layout: post
 title:  "Generating ZF2 template maps on the fly"
 category: general
-tags: blog grunt zf2
+tags: grunt zf2
 summary: One of the performance boosters in Zend Framework 2 is using template_map instead of template_path_stack in the view manager. While developing, it is easier to use the stack. This is because you don't have to add a mapping every time you create a new view. At the end of the development you might forget to transform the stack into a template map. This is why it is useful to <strong>never</strong> use the stack and automate the generation of the template_map array instead.
 image: 20140819/auto-template-mapping.jpg
 thumb: 20140819/thumb-auto-template-mapping.jpg

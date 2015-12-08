@@ -2,7 +2,7 @@
 layout: post
 title:  "Replacing service dependencies with proxies"
 category: general
-tags: blog zf2 proxy doctrine
+tags: zf2 proxy doctrine
 summary: When using the Zend Framework 2 service manager, it is possible to create shared services that will be loaded only once. In some situations however, it is very hard to switch the already injected dependencies in this service. You could mark the service as unshared even if this is often unnecessary. Another solution is to wrap the service with a proxy object and use the proxy instead of the service. 
 image: 20141011/three-shell-game.jpg
 thumb: 20141011/thumb-three-shell-game.jpg
