@@ -3,15 +3,15 @@ layout: post
 title:  "Authenticating with X.509 client certificates"
 category: general
 tags: ssl authentication symfony php
-summary: Last week, I was diving in different authentication systems for API's. One of the better authentication types is authentication through X.509 client certificates. This type of authentication is harder to set-up, but sure is secure, managaeble and powerfull. While searching for documentation on the subject, I was surprised there weren't a lot of good articles. In this article, I will try to explain every step as easy as possible.
+summary: Last week, I was diving in different authentication systems for API's. One of the better ways of authentication is through X.509 client certificates. This one is a bit is harder to set-up, but sure is secure, manageable and powerful. While searching for documentation on the subject, I was surprised there weren't a lot of good articles. In this article, I will try to explain every step as easy as possible.
 image: 20151207/security.jpg
 thumb: 20151207/thumb-security.jpg
 ---
 
 <p>
     Last week, I was diving in different authentication systems for API's.
-    One of the better authentication types is authentication through <a href="https://en.wikipedia.org/wiki/X.509" target="_blank">X.509 client certificates</a>.
-    This type of authentication is harder to set-up, but sure is secure, managaeble and powerfull.
+    One of the better ways of authentication is through <a href="https://en.wikipedia.org/wiki/X.509" target="_blank">X.509 client certificates</a>.
+    This one is a bit is harder to set-up, but sure is secure, manageable and powerful.
     While searching for documentation on the subject, I was surprised there weren't a lot of good articles.
     In this article, I will try to explain every step as easy as possible.
 </p>
@@ -31,8 +31,7 @@ thumb: 20151207/thumb-security.jpg
     Client Certificate authentication can only be done while running HTTPS.
     So first of all, make sure the server is running HTTPS. 
     This can be done with a self-signed or a signed certificate.
-    The creation of this certificate is not part of this article.
-    Your apache vhost configuration should look more or less like this:
+    Your apache VHost configuration should look more or less like this:
 </p>
 
 {% highlight apache %}
@@ -54,9 +53,9 @@ SSLCertificateChainFile "/etc/ssl/yourDomainName.ca-bundle"
 
 <p>
     A certification authority (CA) hands out a digital certificate in which the CA says that a public key in the certificate, 
-    belongs to the person, organisation, server or entity that is mentioned in the certificate.
+    belongs to the person, organization, server or entity that is mentioned in the certificate.
     In our example, this will be done based on the e-mail address that is provided in the certificate.
-    The task of the CA is to control the identiy of the issuer, so that the client that is using the certificates from the CA can be trust.
+    The task of the CA is to control the identity of the issuer, so that the client that is using the certificates from the CA can be trusted.
 </p>
 
 <p>
@@ -88,7 +87,7 @@ SSLOptions +StdEnvVars
     As you can see the client certificate verification is optional. 
     This will make it possible to add another type of authentication like basic authentication when there is nog client certificate.
     The verify depth is set to 1 so that it only accepts certificates signed by the configured CA.
-    Finally the StdEnvVars are registered so that the additional SSL server variables are available in PHP.
+    Finally, the StdEnvVars are registered so that the additional SSL server variables are available in PHP.
 </p>
 
 
@@ -120,7 +119,7 @@ openssl x509 -req -days 365 -in client.csr -CA ca.crt -CAkey ca.key -set_serial 
 
 
 <p>
-    The command above results in a usefull client certificate. 
+    The command above results in a useful client certificate. 
     To make it easier to use the certificate, we will pack the client private key and the certificate in one file.
     This action should run on the client machine:
 </p>
@@ -135,10 +134,12 @@ cat client.crt client.key > client.pem
 
 <p>
     In above example the CSR was created on the client, to make it clear that the certificate + key should only be known by the client.
-    However, it is perfectly possible to run all these commands on the server and send the .pem file to the client who will be using the certificate.
-    This means that it is perfectly possible to automate the creation of the client certificates.
-    It is even possible to create your own user interface to make the keys manageable per user of your application.
+    However, it is perfectly possible to run all these commands on the server and send the pem file to the client who will be using the certificate.
+    This means that the creation of the client certificate can be automated. 
+    You could create your own user interface to make the keys manageable per user of the application.
     This can for example be done with the built-in <a href="http://php.net/manual/en/book.openssl.php" target="_blank">openssl</a> extension of PHP.
+    When the certification file is generated on the server, you should transfer this certificate in a trusted way. 
+    For example a download over HTTPS in the back-end of your application.
 </p>
 
 
@@ -216,7 +217,8 @@ security:
 {% endhighlight %}
 
 <div class="alert alert-warning">
-    <strong>Note:</strong> This type of authentication only works with HTTPS. You might want to enforce HTTPS!
+    <strong>Note:</strong> This type of authentication only works with HTTPS. 
+    <a href="http://symfony.com/doc/current/cookbook/security/force_https.html" target="_blank">You might want to enforce HTTPS</a>!
 </div>
 
 <p>
