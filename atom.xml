@@ -3,13 +3,112 @@
     <title>Toon Verwerft - VeeWee</title>
     <link href="http://veewee.github.io/atom.xml" rel="self"/>
     <link href="http://veewee.github.io/"/>
-    <updated>2015-12-08T21:16:35+01:00</updated>
+    <updated>2016-06-15T18:33:00+02:00</updated>
     <id>http://veewee.github.io</id>
     <author>
         <name>Toon Verwerft</name>
         <uri>http://veewee.github.io/</uri>
         <email>toonverwerft@gmail.com</email>
     </author>
+    
+    <entry>
+        <title>GrumPHP approves Bitbucket Pipelines!</title>
+        <link href="http://veewee.github.io/blog/grumphp-approves-bitbucket-pipelines"/>
+        <updated>2016-06-15T00:00:00+02:00</updated>
+        <id>http://veewee.github.io/blog/grumphp-approves-bitbucket-pipelines</id>
+        <content type="html">&lt;p&gt;
+    Today, my invitation for 
+    &lt;a href=&quot;https://bitbucket.org/&quot; target=&quot;_blank&quot;&gt;Bitbucket&lt;/a&gt;
+    Pipelines Beta got accepted!
+    For those who haven&#39;t heard about it: 
+    &lt;a href=&quot;https://bitbucket.org/product/features/pipelines&quot; target=&quot;_blank&quot;&gt;Pipelines&lt;/a&gt; 
+    is a Continuous Delivery tool integrated in Bitbucket.
+    When you push your changes to your Bitbucket repository, it will spin up a 
+    &lt;a href=&quot;http://docker.io/&quot; target=&quot;_blank&quot;&gt;Docker&lt;/a&gt; 
+    container and run the actions you specify.
+    I was quite exited about the concept and immediately started to set up an automated test scenario with 
+    &lt;a href=&quot;https://github.com/phpro/grumphp&quot; target=&quot;_blank&quot;&gt;GrumPHP&lt;/a&gt;.
+&lt;/p&gt;
+
+&lt;h2&gt;Configuration&lt;/h2&gt;
+
+&lt;p&gt;
+    The configuration of Pipelines is similar to existing services like e.g. 
+    &lt;a href=&quot;https://travis-ci.org/&quot; target=&quot;_blank&quot;&gt;Travis&lt;/a&gt;.
+    It all starts by adding a 
+    &lt;a href=&quot;https://confluence.atlassian.com/bitbucket/configure-bitbucket-pipelines-yml-792298910.html&quot; target=&quot;_blank&quot;&gt;bitbucket-pipelines.yml&lt;/a&gt; 
+    file to the root of your project. 
+&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;bitbucket-pipelines.yml:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;yaml&quot;&gt;&lt;span class=&quot;l-Scalar-Plain&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;php:7.0-cli&lt;/span&gt;
+
+&lt;span class=&quot;l-Scalar-Plain&quot;&gt;pipelines&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;l-Scalar-Plain&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;step&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;l-Scalar-Plain&quot;&gt;script&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+          &lt;span class=&quot;p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;apt-get update &amp;amp;&amp;amp; apt-get install -y git&lt;/span&gt;
+          &lt;span class=&quot;p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;php -r &amp;quot;readfile(&amp;#39;https://getcomposer.org/installer&amp;#39;);&amp;quot; | php&lt;/span&gt;
+          &lt;span class=&quot;p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;php composer.phar global require hirak/prestissimo&lt;/span&gt;
+          &lt;span class=&quot;p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;php composer.phar install --prefer-dist&lt;/span&gt;
+          &lt;span class=&quot;p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;./vendor/bin/grumphp run&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+    After every commit, the pipelines file will be loaded.
+    Since we&#39;ve added a default pipeline, it will spin up a basic &lt;a href=&quot;https://hub.docker.com/_/php/&quot; target=&quot;_blank&quot;&gt;PHP 7.0 container&lt;/a&gt;.
+    Because it&#39;s a basic container, we&#39;ll have to install git and composer to make sure the test scenario works.
+    The installation of these packages will happen on every commit,
+    so it is better to create your own container which contains all the tools you need to test your code.
+    Finally, the composer dependencies are installed and the GrumPHP command is being triggered.
+&lt;/p&gt;
+
+&lt;h2&gt;Analysing the results&lt;/h2&gt;
+
+&lt;p class=&quot;text-center&quot;&gt;
+    &lt;a href=&quot;/images/blog/20160615/pipelines-overview.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/images/blog/20160615/pipelines-overview.png&quot; alt=&quot;GrumPHP Pipelines&quot; class=&quot;img-responsive&quot; /&gt;&lt;/a&gt;
+&lt;p&gt;
+
+&lt;p&gt;
+    As you can see, the Pipelines overview page is very clean and focuses on the output of your tasks.
+    Every commit will trigger a new run and a new results overview page.
+    This makes it very easy to spot problems before they got merged in!
+&lt;/p&gt;
+
+&lt;h3&gt;Pros&lt;/h3&gt;
+
+&lt;ul&gt;
+    &lt;li&gt;It is a unique service that integrates completely on your git server!&lt;/li&gt;
+    &lt;li&gt;The interface is very simple and focuses on the errors.&lt;/li&gt;
+    &lt;li&gt;Pipelines is integrated in every screen in Bitbucket. You get feedback about the committed code in a wink of an eye.&lt;/li&gt;
+    &lt;li&gt;It is possible to let Pipelines handle your Continuous Delivery flow!&lt;/li&gt;
+    &lt;li&gt;You can specify different steps per git branch.&lt;/li&gt;
+    &lt;li&gt;It works perfectly fine with GrumPHP!&lt;/li&gt;
+    &lt;li&gt;It is FREE!&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Cons&lt;/h3&gt;
+
+&lt;ul&gt;
+    &lt;li&gt;The docker image is loaded from &lt;a href=&quot;https://hub.docker.com&quot; target=&quot;_blank&quot;&gt;DockerHub&lt;/a&gt; which takes a while.&lt;/li&gt;
+    &lt;li&gt;You can only specify 1 image, which means you cannot test every commit against multiple PHP versions.&lt;/li&gt;
+    &lt;li&gt;It is not possible to cache the composer packages. All dependencies are downloaded on every commit.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;
+    Bitbucket has done a really great job creating ther unique Pipelines service! 
+    Currently it is still in Beta which means they are still working on making it even better. 
+    I hope to see some additional features like running tests on multiple images, caching volumes, ... in a near future.
+    In a next phase, I will be playing around with the Continuous Delivery options and maybe link Pipelines 
+    with an 
+    &lt;a href=&quot;https://www.ansible.com/&quot; target=&quot;_blank&quot;&gt;Ansible&lt;/a&gt;
+    script to automatically deploy the changes to a development server.
+&lt;/p&gt;
+</content>
+    </entry>
     
     <entry>
         <title>Authenticating with X.509 client certificates</title>
