@@ -3,13 +3,374 @@
     <title>Toon Verwerft - VeeWee</title>
     <link href="http://veewee.github.io/atom.xml" rel="self"/>
     <link href="http://veewee.github.io/"/>
-    <updated>2016-06-15T18:33:00+02:00</updated>
+    <updated>2016-07-30T14:42:18+02:00</updated>
     <id>http://veewee.github.io</id>
     <author>
         <name>Toon Verwerft</name>
         <uri>http://veewee.github.io/</uri>
         <email>toonverwerft@gmail.com</email>
     </author>
+    
+    <entry>
+        <title>Writing your first NodeJS Lambda function</title>
+        <link href="http://veewee.github.io/blog/writing-your-first-nodjs-lambda-function"/>
+        <updated>2016-07-30T00:00:00+02:00</updated>
+        <id>http://veewee.github.io/blog/writing-your-first-nodjs-lambda-function</id>
+        <content type="html">&lt;p&gt;
+    Last week I was playing around with writing some custom &lt;a href=&quot;https://slack.com/&quot; target=&quot;_blank&quot;&gt;Slack&lt;/a&gt; slashcommands and cronjobs.
+    Originally, I started writing these integrations with PHP. 
+    Since slack requires a publically available endpoint and I did not want to set up a server for these scripts,
+    I decided to take a look at &lt;a href=&quot;https://aws.amazon.com/lambda/details/&quot; target=&quot;_blank&quot;&gt;AWS Lambda&lt;/a&gt;.
+    This Amazon service makes it possible to run scripts serverless. The scripts are triggered based on triggers inside of AWS.
+    In this artile you can find out how to get started with writing lambda functions.
+&lt;/p&gt;
+
+&lt;h2&gt;Selecting the right tools&lt;/h2&gt;
+
+&lt;p&gt;
+    AWS Lambda can run Python, Java and NodeJS scripts.
+    Since I&#39;ve got some experience writing &lt;a href=&quot;https://nodejs.org/en/&quot; target=&quot;_blank&quot;&gt;NodeJS&lt;/a&gt;, I&#39;ve choosen to go for this technology.
+    There are many tools available for writing Lambda functions in NodeJS. 
+    After investigating these tools, I&#39;ve decided to go with &lt;a href=&quot;https://github.com/Testlio/lambda-tools&quot; target=&quot;_blank&quot;&gt;lambda-tools&lt;/a&gt;.
+    This tool makes it easy to develop and deploy multiple lambda functions inside one codebase. 
+    It comes with a Yeoman generator named &lt;a href=&quot;https://github.com/Testlio/generator-lambda-tools&quot;&gt;generator-lambda-tools&lt;/a&gt;.
+&lt;/p&gt;
+
+&lt;h2&gt;Getting started&lt;/h2&gt;
+
+&lt;p&gt;
+    The first thing we&#39;ll want to do is scafold the application:
+&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;sh&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;yo lambda-tools
+
+? Service name: your-lambda-name
+? Service description: Some Description
+? License &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;API&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: MIT
+? Author email your-email
+? Author name your-name
+? Default Lambda runtime Node.js 4.3
+? Install dependencies lambda-tools, lambda-foundation
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+    When the command is finished, you&#39;ll find a project structure like this:
+&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;sh&quot;&gt;.
+├── .lambda-tools-rc.json
+├── .yo-rc.json
+├── api.json
+├── cf.json
+├── lambdas/
+└── node_modules/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+    There are 2 hidden configuration files named `.lambda-tools-rc.json` and `.yo-rc.json`. 
+    These are used to configure the yeoman generator and the lambda-tools command.
+    The `api.json` is used for the &lt;a href=&quot;https://aws.amazon.com/api-gateway/&quot; target=&quot;_blank&quot;&gt;AWS API Gateway&lt;/a&gt; service.
+    This service will make it possible to create a public endpoint that triggers the Lambda method we&#39;ll create next.
+    &lt;br /&gt;
+    The `cf.json` is used for the &lt;a href=&quot;https://aws.amazon.com/cloudformation/&quot; target=&quot;_blank&quot;&gt;AWS CloudFormation&lt;/a&gt; service.
+    This service will take care of orchestrating the related AWS services. 
+    It will be used to deploy your lambda functions and let all the AWS services talk to each other.
+    &lt;br /&gt;
+    The `lambdas` directory is currently empty, but will contain all the lambda functions you are going to write.
+    &lt;br /&gt;
+    Finally there is the `node_modules` directory which contains all your project dependencies.
+&lt;/p&gt;
+
+&lt;h2&gt;Writing your first lambda&lt;/h2&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;sh&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;yo lambda-tools:lambda
+
+? Lambda &lt;span class=&quot;k&quot;&gt;function &lt;/span&gt;name: mylambda
+? Create event.json: Yes
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+    The command above will create a folder named `mylambda` inside the `lambdas` directory.
+    In this folder there are 2 files: `event.json` and `index.js`.
+    The event.json contains the data that will be used as input for the Lambda function.
+    Feel free to put it in `.gitignore` since you can only use this for testing purpose.
+    The `index.js` file contains a `handler()` method and looks like this:
+&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;js&quot;&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;use strict&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;exports&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;handler&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;succeed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;Hello!&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+    The callback has 2 parameters:
+    `event` which will be populated by AWS Lambda. During development this parameter can be linked to the `event.json` file.
+    `context` which will make it possible to `succeed()` or `fail()` the lambda method.
+    The parameters added to these 2 functions will be returned as result of the lambda:
+&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;sh&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;node node_modules/lambda-tools/bin/lambda.js execute ./lambdas/mylambda/index.js -e lambdas/mylambda/event.json -v
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;html&quot;&gt;Executing: lambdas/mylambda/index.js
+    --
+    With event:
+    {}
+    --
+
+
+    --
+    Result &amp;#39;Hello!&amp;#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Creating a cronjob&lt;/h2&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;sh&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;yo lambda-tools:periodic-lambda      
+
+? Lambda &lt;span class=&quot;k&quot;&gt;function &lt;/span&gt;name cronjob
+? Create event.json Yes
+? Schedule/Rate expression cron&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0 10 * * ? *&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+? CloudWatch rule name &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;leave empty &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;automatic name&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; ten-o-clock
+? CloudWatch rule logical ID &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;used in CloudFormation template&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; TenOClockEvent
+? CloudWatch rule description &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;leave empty to skip&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+? CloudWatch rule static input &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;JSON string, leave empty to skip&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+? CloudWatch rule input path &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;JSONPath string, leave empty to skip&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+? Is CloudWatch rule ENABLED? Yes
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+    In &lt;a href=&quot;https://aws.amazon.com/cloudwatch/&quot; target=&quot;_blank&quot;&gt;AWS CloudWatch&lt;/a&gt;, it is possible to create RATE or CRON rules.
+    These rules can be the trigger for a Lambda function to execute. This means it is possible to create a lambda function that executes periodically.
+    The generated code looks and behaves exactly the same as the `mylambda` code above.
+    In the `cf.json` file, a event rule is added to cloudwatch and the event is linked to the lambda function.
+&lt;/p&gt;
+
+&lt;h2&gt;Creating an API endpoint&lt;/h2&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;sh&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;yo lambda-tools:endpoint   
+
+? Path &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;the endpoint /lambdas/apilambda
+? HTTP Method POST
+? Lambda &lt;span class=&quot;k&quot;&gt;function &lt;/span&gt;name lambdas-apilambda-post
+? Map request body to event property &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;leave blank to skip&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; body
+? Map HTTP headers? No
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+    By adding an API endpoint, you can create a publically available HTTPS endpoint that triggers a Lambda function.
+    The generated code again looks the same as the `mylambda` code.
+    The `api.json` file is altered and now describes the new endpoint:
+&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;json&quot;&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;quot;paths&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;quot;/lambdas/apilambda&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;quot;post&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;quot;responses&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;nt&quot;&gt;&amp;quot;200&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                        &lt;span class=&quot;nt&quot;&gt;&amp;quot;description&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Default response&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                        &lt;span class=&quot;nt&quot;&gt;&amp;quot;schema&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                            &lt;span class=&quot;nt&quot;&gt;&amp;quot;type&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;object&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                            &lt;span class=&quot;nt&quot;&gt;&amp;quot;properties&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{},&lt;/span&gt;
+                            &lt;span class=&quot;nt&quot;&gt;&amp;quot;additionalProperties&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;
+                        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+                    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;quot;parameters&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[],&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;quot;x-amazon-apigateway-auth&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;nt&quot;&gt;&amp;quot;type&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;none&amp;quot;&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;quot;x-amazon-apigateway-integration&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;nt&quot;&gt;&amp;quot;type&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;aws&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                    &lt;span class=&quot;nt&quot;&gt;&amp;quot;uri&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;$lLambdasApilambdaPost&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                    &lt;span class=&quot;nt&quot;&gt;&amp;quot;credentials&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;$IamRoleArnApiGateway&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                    &lt;span class=&quot;nt&quot;&gt;&amp;quot;httpMethod&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;POST&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                    &lt;span class=&quot;nt&quot;&gt;&amp;quot;requestParameters&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{},&lt;/span&gt;
+                    &lt;span class=&quot;nt&quot;&gt;&amp;quot;requestTemplates&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                        &lt;span class=&quot;nt&quot;&gt;&amp;quot;application/json&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;{\&amp;quot;path\&amp;quot;:\&amp;quot;$context.resourcePath\&amp;quot;,\&amp;quot;body\&amp;quot;:$input.json(&amp;#39;$&amp;#39;)}&amp;quot;&lt;/span&gt;
+                    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+                    &lt;span class=&quot;nt&quot;&gt;&amp;quot;responses&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                        &lt;span class=&quot;nt&quot;&gt;&amp;quot;default&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                            &lt;span class=&quot;nt&quot;&gt;&amp;quot;statusCode&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;200&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                            &lt;span class=&quot;nt&quot;&gt;&amp;quot;responseTemplates&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                                &lt;span class=&quot;nt&quot;&gt;&amp;quot;application/json&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;$input.json(&amp;#39;$&amp;#39;)&amp;quot;&lt;/span&gt;
+                            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+                        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+                    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+    The added path describes the endpoint. 
+    As you can see it only handles POST requests with a content-type of `application/json`.
+    The JSON body of the request is added as the &quot;body&quot; parameter of the Lambda event.
+    This is done internally through the `x-amazon-apigateway-integration` header.
+    In the response you&#39;ll have to add the responseTemplate to make sure that the result of the lambda is returned as JSON.
+    You can test the API endpoint with following commands:
+&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;sh&quot;&gt;&lt;span class=&quot;c&quot;&gt;# This command will start a server on port 3000:&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;node node_modules/lambda-tools/bin/lambda.js run -a api.json
+
+&lt;span class=&quot;c&quot;&gt;# Send a curl request:&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;curl -X POST -H &lt;span class=&quot;s2&quot;&gt;&amp;quot;Content-Type: application/json&amp;quot;&lt;/span&gt; -d &lt;span class=&quot;s1&quot;&gt;&amp;#39;{request: &amp;quot;will be added to event as body param&amp;quot;}&amp;#39;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;http://localhost:3000/lambdas/apilambda&amp;quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+    This HTTP request will be handled as followed:
+&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;html&quot;&gt;  &lt;span class=&quot;nt&quot;&gt;&amp;lt;--&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;POST&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;lambdas&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;apilambda&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;--&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;Configuring&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;Lambda&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;function&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt; Configuring Lambda function 1ms
+
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;--&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;Creating&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;integration&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;apiId&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;local-lambda&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;quot;,&lt;/span&gt;
+            &lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;httpMethod&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;POST&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;quot;,&lt;/span&gt;
+            &lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;identity&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;{},&lt;/span&gt;
+            &lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;requestId&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;98e626ab-bbc7-4be2-a94c-b6f622b1d140&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;quot;,&lt;/span&gt;
+            &lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;resourceId&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;POST&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;lambdas&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;apilambda&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;quot;,&lt;/span&gt;
+            &lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;resourcePath&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;quot;/&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;lambdas&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;apilambda&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;quot;,&lt;/span&gt;
+            &lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;stage&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;dev&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;
+        &lt;span class=&quot;err&quot;&gt;},&lt;/span&gt;
+        &lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;quot;/&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;lambdas&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;apilambda&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;quot;,&lt;/span&gt;
+            &lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;will&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;be&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;added&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;event&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;body&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;param&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;
+            &lt;span class=&quot;err&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;err&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt; Creating integration 14ms
+
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;--&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;Executing&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;Lambda&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;lambdas-apilambda-post&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;handler&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;)&lt;/span&gt;
+
+
+    &lt;span class=&quot;na&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt; Executing Lambda function 151ms
+
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;--&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;Creating&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;response&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;{},&lt;/span&gt;
+        &lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;application&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;quot;,&lt;/span&gt;
+        &lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;hello&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;!&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt; Creating response 1ms
+
+  --&amp;gt; POST /lambdas/apilambda 200 200ms 87b
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Configuring AWS&lt;/h2&gt;
+
+&lt;p&gt;
+    Now that we&#39;ve created our lambda methods, the next step is to deploy them to AWS.
+    This step is not documented very good, so I&#39;ll try to describe it as good as possible.
+&lt;/p&gt;
+
+&lt;p&gt;
+    First you&#39;ll need to create a user with the &lt;a href=&quot;https://github.com/Testlio/lambda-tools#iam-permissions&quot;&gt;IAM-permissions described on the lambda-tools page&lt;/a&gt;.
+    When you&#39;ve created this user, you&#39;ll have to make sure that the user has an Access Key so that it can be used to automate stuff.
+    Now that you&#39;ve got both the Access Id and Secret Access Key, you&#39;ll have to generate an API token: 
+&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;sh&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;aws configure
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;aws sts get-session-token
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+    Now that we have all the AWS parameters, we&#39;ll need to create a `.env` file so that the tool knows how to deploy the application:
+&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;sh&quot;&gt;&lt;span class=&quot;nv&quot;&gt;AWS_ENVIRONMENT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;dev
+&lt;span class=&quot;nv&quot;&gt;AWS_ACCESS_KEY_ID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;your-key-id
+&lt;span class=&quot;nv&quot;&gt;AWS_SECRET_ACCESS_KEY&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;your-key-secret
+&lt;span class=&quot;nv&quot;&gt;AWS_SESSION_TOKEN&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;your-key-token
+&lt;span class=&quot;nv&quot;&gt;AWS_REGION&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;eu-west-1
+&lt;span class=&quot;nv&quot;&gt;AWS_RUNTIME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;nodejs4.3
+&lt;span class=&quot;nv&quot;&gt;EXCLUDE_GLOBS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;event.json *.env *.dist&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;PACKAGE_DIRECTORY&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;build
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+    Finally we need to configure a &lt;a href=&quot;https://aws.amazon.com/s3&quot;&gt;AWS S3&lt;/a&gt; bucket in which the lambda functions will be stored.
+    This needs to be a unique index which can be configured in the `.lambda-tools-rc.json` file. 
+    Add following `tools` to the root element:
+&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;json&quot;&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;quot;tools&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;quot;resources&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;quot;s3Bucket&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;your-unique-s3-bucket-name&amp;quot;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+    Now that we&#39;ve configured the project source code to run with AWS, we&#39;ll have to set up everything in AWS.
+    Luckilly this can be done with one simple command that only needs to run once:
+&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;sh&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;node node_modules/lambda-tools/bin/lambda.js setup -r eu-west-1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Deploying your lambdas to AWS&lt;/h2&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;sh&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;node node_modules/lambda-tools/bin/lambda.js deploy -r eu-west-1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+    By running the command above, the lambdas are build into some archive files.
+    These archive files are stored in your AWS S3 Bucket.
+    When this is done, the `cf.json` file is added to AWS CloudFormation which will start the orchestration of the installation:
+&lt;/p&gt;
+
+&lt;ul&gt;
+    &lt;li&gt;A CloudFormation stack will be created or updated based on the `cf.json` file.&lt;/li&gt;
+    &lt;li&gt;The source code of the lambdas are stored in your S3 Bucket&lt;/li&gt;
+    &lt;li&gt;IAM permissions will be added&lt;/li&gt;
+    &lt;li&gt;A new scheduling rule will be added to CloudWatch.&lt;/li&gt;
+    &lt;li&gt;New logging groups will be added to CloudWatch.&lt;/li&gt;
+    &lt;li&gt;The API gateway will be configured with the `api.json` file.&lt;/li&gt;
+    &lt;li&gt;The lambdas will be created and configured.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Adding configurable variables to the lambdas&lt;/h2&gt;
+
+&lt;p&gt;
+    Adding custom configuration to a lambda function can be done based on environment variables.
+    These variables can be added with the `-e` option during a deploy.
+    When you&#39;ve got a lot of configurable variables, another option is to add a .env file to every lambda directory and use the 
+    &lt;a href=&quot;https://github.com/ncthis/env-loader&quot; target=&quot;_blank&quot;&gt;env-loader&lt;/a&gt;.
+    You&#39;ll have to create an asset to make sure the .env file is added to your lambda source code.
+    This can be done by adding a new `cf.json` file to every lambda directory that looks like:
+&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;json&quot;&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;Assets&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;quot;.env&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;.env&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;
+    If you are writing your first AWS project, getting started is pretty complex.
+    The documentation is rather big and you&#39;ll have to find your way in all the different AWS services.
+    Once you found your way and got your project set-up and configured, writing Lambda functions is pretty fun.
+    They are easy to understand and there are a lot of NPM packages available for Rapid Application Development.
+    I am definitely looking forward in writing more Lambda integrations!
+&lt;/p&gt;
+</content>
+    </entry>
     
     <entry>
         <title>GrumPHP approves Bitbucket Pipelines!</title>

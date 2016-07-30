@@ -1,0 +1,170 @@
+<!DOCTYPE html><html><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1"><title>Writing your first NodeJS Lambda function</title><meta name=viewport content="width=device-width, initial-scale=1.0"><link rel=stylesheet href=/css/140b.blog.css><!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]--><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/favicon.ico><link rel=alternate type=application/atom+xml title="Toon Verwerft" href=https://veewee.github.io/atom.xml></head><body class=bs-docs-home><a class=sr-only href=#content>Skip to main content</a><header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role=banner><div class=container><div class=navbar-header><button class=navbar-toggle type=button data-toggle=collapse data-target=.bs-navbar-collapse><span class=sr-only>Toggle navigation</span> <span class=icon-bar></span> <span class=icon-bar></span> <span class=icon-bar></span></button> <a href="/" class=navbar-brand>Toon Verwerft</a></div><nav class="collapse navbar-collapse bs-navbar-collapse" role=navigation><ul class="nav navbar-nav"><li><a href="/">Home</a></li><li><a href=//twitter.com/toonverwerft>Twitter</a></li><li><a href="//github.com/veewee/">Github</a></li><li><a href=//www.linkedin.com/pub/toon-verwerft/36/b90/a2b>LinkedIn</a></li></ul></nav></div></header><a name=#content></a><div id=content><div class=container><div class=row><div class="col-xs-12 col-sm-8 col-md-9 left-pane"><div class=post-details><h1>Writing your first NodeJS Lambda function</h1><div class=pull-right><span class="meta label label-info">30 Jul 2016</span></div><small>Tags: <a href=/tags/nodejs class="label label-primary tag" title="View posts tagged with &quot;nodejs&quot;">nodejs</a> <a href=/tags/lambda class="label label-primary tag" title="View posts tagged with &quot;lambda&quot;">lambda</a> <a href=/tags/serverless class="label label-primary tag" title="View posts tagged with &quot;serverless&quot;">serverless</a></small><div class=post><img src=/images/blog/20160730/4a44.lambda.jpg class=post-banner alt=""><p>Last week I was playing around with writing some custom <a href="https://slack.com/" target=_blank>Slack</a> slashcommands and cronjobs. Originally, I started writing these integrations with PHP. Since slack requires a publically available endpoint and I did not want to set up a server for these scripts, I decided to take a look at <a href="https://aws.amazon.com/lambda/details/" target=_blank>AWS Lambda</a>. This Amazon service makes it possible to run scripts serverless. The scripts are triggered based on triggers inside of AWS. In this artile you can find out how to get started with writing lambda functions.</p><h2>Selecting the right tools</h2><p>AWS Lambda can run Python, Java and NodeJS scripts. Since I've got some experience writing <a href="https://nodejs.org/en/" target=_blank>NodeJS</a>, I've choosen to go for this technology. There are many tools available for writing Lambda functions in NodeJS. After investigating these tools, I've decided to go with <a href=https://github.com/Testlio/lambda-tools target=_blank>lambda-tools</a>. This tool makes it easy to develop and deploy multiple lambda functions inside one codebase. It comes with a Yeoman generator named <a href=https://github.com/Testlio/generator-lambda-tools>generator-lambda-tools</a>.</p><h2>Getting started</h2><p>The first thing we'll want to do is scafold the application:</p><div class=highlight><pre><code class=sh><span class=nv>$ </span>yo lambda-tools
+
+? Service name: your-lambda-name
+? Service description: Some Description
+? License <span class=o>(</span>API<span class=o>)</span>: MIT
+? Author email your-email
+? Author name your-name
+? Default Lambda runtime Node.js 4.3
+? Install dependencies lambda-tools, lambda-foundation
+</code></pre></div><p>When the command is finished, you'll find a project structure like this:</p><div class=highlight><pre><code class=sh>.
+├── .lambda-tools-rc.json
+├── .yo-rc.json
+├── api.json
+├── cf.json
+├── lambdas/
+└── node_modules/
+</code></pre></div><p>There are 2 hidden configuration files named `.lambda-tools-rc.json` and `.yo-rc.json`. These are used to configure the yeoman generator and the lambda-tools command. The `api.json` is used for the <a href="https://aws.amazon.com/api-gateway/" target=_blank>AWS API Gateway</a> service. This service will make it possible to create a public endpoint that triggers the Lambda method we'll create next.<br>The `cf.json` is used for the <a href="https://aws.amazon.com/cloudformation/" target=_blank>AWS CloudFormation</a> service. This service will take care of orchestrating the related AWS services. It will be used to deploy your lambda functions and let all the AWS services talk to each other.<br>The `lambdas` directory is currently empty, but will contain all the lambda functions you are going to write.<br>Finally there is the `node_modules` directory which contains all your project dependencies.</p><h2>Writing your first lambda</h2><div class=highlight><pre><code class=sh><span class=nv>$ </span>yo lambda-tools:lambda
+
+? Lambda <span class=k>function </span>name: mylambda
+? Create event.json: Yes
+</code></pre></div><p>The command above will create a folder named `mylambda` inside the `lambdas` directory. In this folder there are 2 files: `event.json` and `index.js`. The event.json contains the data that will be used as input for the Lambda function. Feel free to put it in `.gitignore` since you can only use this for testing purpose. The `index.js` file contains a `handler()` method and looks like this:</p><div class=highlight><pre><code class=js><span class=s1>&#39;use strict&#39;</span><span class=p>;</span>
+
+<span class=nx>exports</span><span class=p>.</span><span class=nx>handler</span> <span class=o>=</span> <span class=kd>function</span><span class=p>(</span><span class=nx>event</span><span class=p>,</span> <span class=nx>context</span><span class=p>)</span> <span class=p>{</span>
+    <span class=nx>context</span><span class=p>.</span><span class=nx>succeed</span><span class=p>(</span><span class=s1>&#39;Hello!&#39;</span><span class=p>);</span>
+<span class=p>};</span>
+</code></pre></div><p>The callback has 2 parameters: `event` which will be populated by AWS Lambda. During development this parameter can be linked to the `event.json` file. `context` which will make it possible to `succeed()` or `fail()` the lambda method. The parameters added to these 2 functions will be returned as result of the lambda:</p><div class=highlight><pre><code class=sh><span class=nv>$ </span>node node_modules/lambda-tools/bin/lambda.js execute ./lambdas/mylambda/index.js -e lambdas/mylambda/event.json -v
+</code></pre></div><div class=highlight><pre><code class=html>Executing: lambdas/mylambda/index.js
+    --
+    With event:
+    {}
+    --
+
+
+    --
+    Result &#39;Hello!&#39;
+</code></pre></div><h2>Creating a cronjob</h2><div class=highlight><pre><code class=sh><span class=nv>$ </span>yo lambda-tools:periodic-lambda      
+
+? Lambda <span class=k>function </span>name cronjob
+? Create event.json Yes
+? Schedule/Rate expression cron<span class=o>(</span>0 10 * * ? *<span class=o>)</span>
+? CloudWatch rule name <span class=o>(</span>leave empty <span class=k>for </span>automatic name<span class=o>)</span> ten-o-clock
+? CloudWatch rule logical ID <span class=o>(</span>used in CloudFormation template<span class=o>)</span> TenOClockEvent
+? CloudWatch rule description <span class=o>(</span>leave empty to skip<span class=o>)</span>
+? CloudWatch rule static input <span class=o>(</span>JSON string, leave empty to skip<span class=o>)</span>
+? CloudWatch rule input path <span class=o>(</span>JSONPath string, leave empty to skip<span class=o>)</span>
+? Is CloudWatch rule ENABLED? Yes
+</code></pre></div><p>In <a href="https://aws.amazon.com/cloudwatch/" target=_blank>AWS CloudWatch</a>, it is possible to create RATE or CRON rules. These rules can be the trigger for a Lambda function to execute. This means it is possible to create a lambda function that executes periodically. The generated code looks and behaves exactly the same as the `mylambda` code above. In the `cf.json` file, a event rule is added to cloudwatch and the event is linked to the lambda function.</p><h2>Creating an API endpoint</h2><div class=highlight><pre><code class=sh><span class=nv>$ </span>yo lambda-tools:endpoint   
+
+? Path <span class=k>for </span>the endpoint /lambdas/apilambda
+? HTTP Method POST
+? Lambda <span class=k>function </span>name lambdas-apilambda-post
+? Map request body to event property <span class=o>(</span>leave blank to skip<span class=o>)</span> body
+? Map HTTP headers? No
+</code></pre></div><p>By adding an API endpoint, you can create a publically available HTTPS endpoint that triggers a Lambda function. The generated code again looks the same as the `mylambda` code. The `api.json` file is altered and now describes the new endpoint:</p><div class=highlight><pre><code class=json><span class=p>{</span>
+    <span class=nt>&quot;paths&quot;</span><span class=p>:</span> <span class=p>{</span>
+        <span class=nt>&quot;/lambdas/apilambda&quot;</span><span class=p>:</span> <span class=p>{</span>
+            <span class=nt>&quot;post&quot;</span><span class=p>:</span> <span class=p>{</span>
+                <span class=nt>&quot;responses&quot;</span><span class=p>:</span> <span class=p>{</span>
+                    <span class=nt>&quot;200&quot;</span><span class=p>:</span> <span class=p>{</span>
+                        <span class=nt>&quot;description&quot;</span><span class=p>:</span> <span class=s2>&quot;Default response&quot;</span><span class=p>,</span>
+                        <span class=nt>&quot;schema&quot;</span><span class=p>:</span> <span class=p>{</span>
+                            <span class=nt>&quot;type&quot;</span><span class=p>:</span> <span class=s2>&quot;object&quot;</span><span class=p>,</span>
+                            <span class=nt>&quot;properties&quot;</span><span class=p>:</span> <span class=p>{},</span>
+                            <span class=nt>&quot;additionalProperties&quot;</span><span class=p>:</span> <span class=kc>true</span>
+                        <span class=p>}</span>
+                    <span class=p>}</span>
+                <span class=p>},</span>
+                <span class=nt>&quot;parameters&quot;</span><span class=p>:</span> <span class=p>[],</span>
+                <span class=nt>&quot;x-amazon-apigateway-auth&quot;</span><span class=p>:</span> <span class=p>{</span>
+                    <span class=nt>&quot;type&quot;</span><span class=p>:</span> <span class=s2>&quot;none&quot;</span>
+                <span class=p>},</span>
+                <span class=nt>&quot;x-amazon-apigateway-integration&quot;</span><span class=p>:</span> <span class=p>{</span>
+                    <span class=nt>&quot;type&quot;</span><span class=p>:</span> <span class=s2>&quot;aws&quot;</span><span class=p>,</span>
+                    <span class=nt>&quot;uri&quot;</span><span class=p>:</span> <span class=s2>&quot;$lLambdasApilambdaPost&quot;</span><span class=p>,</span>
+                    <span class=nt>&quot;credentials&quot;</span><span class=p>:</span> <span class=s2>&quot;$IamRoleArnApiGateway&quot;</span><span class=p>,</span>
+                    <span class=nt>&quot;httpMethod&quot;</span><span class=p>:</span> <span class=s2>&quot;POST&quot;</span><span class=p>,</span>
+                    <span class=nt>&quot;requestParameters&quot;</span><span class=p>:</span> <span class=p>{},</span>
+                    <span class=nt>&quot;requestTemplates&quot;</span><span class=p>:</span> <span class=p>{</span>
+                        <span class=nt>&quot;application/json&quot;</span><span class=p>:</span> <span class=s2>&quot;{\&quot;path\&quot;:\&quot;$context.resourcePath\&quot;,\&quot;body\&quot;:$input.json(&#39;$&#39;)}&quot;</span>
+                    <span class=p>},</span>
+                    <span class=nt>&quot;responses&quot;</span><span class=p>:</span> <span class=p>{</span>
+                        <span class=nt>&quot;default&quot;</span><span class=p>:</span> <span class=p>{</span>
+                            <span class=nt>&quot;statusCode&quot;</span><span class=p>:</span> <span class=s2>&quot;200&quot;</span><span class=p>,</span>
+                            <span class=nt>&quot;responseTemplates&quot;</span><span class=p>:</span> <span class=p>{</span>
+                                <span class=nt>&quot;application/json&quot;</span><span class=p>:</span> <span class=s2>&quot;$input.json(&#39;$&#39;)&quot;</span>
+                            <span class=p>}</span>
+                        <span class=p>}</span>
+                    <span class=p>}</span>
+                <span class=p>}</span>
+            <span class=p>}</span>
+        <span class=p>}</span>
+    <span class=p>}</span>
+<span class=p>}</span>
+</code></pre></div><p>The added path describes the endpoint. As you can see it only handles POST requests with a content-type of `application/json`. The JSON body of the request is added as the "body" parameter of the Lambda event. This is done internally through the `x-amazon-apigateway-integration` header. In the response you'll have to add the responseTemplate to make sure that the result of the lambda is returned as JSON. You can test the API endpoint with following commands:</p><div class=highlight><pre><code class=sh><span class=c># This command will start a server on port 3000:</span>
+<span class=nv>$ </span>node node_modules/lambda-tools/bin/lambda.js run -a api.json
+
+<span class=c># Send a curl request:</span>
+<span class=nv>$ </span>curl -X POST -H <span class=s2>&quot;Content-Type: application/json&quot;</span> -d <span class=s1>&#39;{request: &quot;will be added to event as body param&quot;}&#39;</span> <span class=s2>&quot;http://localhost:3000/lambdas/apilambda&quot;</span>
+</code></pre></div><p>This HTTP request will be handled as followed:</p><div class=highlight><pre><code class=html>  <span class=nt>&lt;--</span> <span class=na>POST</span> <span class=err>/</span><span class=na>lambdas</span><span class=err>/</span><span class=na>apilambda</span>
+    <span class=err>&lt;</span><span class=na>--</span> <span class=na>Configuring</span> <span class=na>Lambda</span> <span class=na>function</span>
+    <span class=na>--</span><span class=nt>&gt;</span> Configuring Lambda function 1ms
+
+    <span class=nt>&lt;--</span> <span class=na>Creating</span> <span class=na>integration</span>
+    <span class=err>{</span>
+        <span class=err>&quot;</span><span class=na>context</span><span class=err>&quot;</span><span class=na>:</span> <span class=err>{</span>
+            <span class=err>&quot;</span><span class=na>apiId</span><span class=err>&quot;</span><span class=na>:</span> <span class=err>&quot;</span><span class=na>local-lambda</span><span class=err>&quot;,</span>
+            <span class=err>&quot;</span><span class=na>httpMethod</span><span class=err>&quot;</span><span class=na>:</span> <span class=err>&quot;</span><span class=na>POST</span><span class=err>&quot;,</span>
+            <span class=err>&quot;</span><span class=na>identity</span><span class=err>&quot;</span><span class=na>:</span> <span class=err>{},</span>
+            <span class=err>&quot;</span><span class=na>requestId</span><span class=err>&quot;</span><span class=na>:</span> <span class=err>&quot;</span><span class=na>98e626ab-bbc7-4be2-a94c-b6f622b1d140</span><span class=err>&quot;,</span>
+            <span class=err>&quot;</span><span class=na>resourceId</span><span class=err>&quot;</span><span class=na>:</span> <span class=err>&quot;</span><span class=na>POST</span> <span class=err>/</span><span class=na>lambdas</span><span class=err>/</span><span class=na>apilambda</span><span class=err>&quot;,</span>
+            <span class=err>&quot;</span><span class=na>resourcePath</span><span class=err>&quot;</span><span class=na>:</span> <span class=err>&quot;/</span><span class=na>lambdas</span><span class=err>/</span><span class=na>apilambda</span><span class=err>&quot;,</span>
+            <span class=err>&quot;</span><span class=na>stage</span><span class=err>&quot;</span><span class=na>:</span> <span class=err>&quot;</span><span class=na>dev</span><span class=err>&quot;</span>
+        <span class=err>},</span>
+        <span class=err>&quot;</span><span class=na>event</span><span class=err>&quot;</span><span class=na>:</span> <span class=err>{</span>
+            <span class=err>&quot;</span><span class=na>path</span><span class=err>&quot;</span><span class=na>:</span> <span class=err>&quot;/</span><span class=na>lambdas</span><span class=err>/</span><span class=na>apilambda</span><span class=err>&quot;,</span>
+            <span class=err>&quot;</span><span class=na>body</span><span class=err>&quot;</span><span class=na>:</span> <span class=err>{</span>
+                <span class=err>&quot;</span><span class=na>request</span><span class=err>&quot;</span><span class=na>:</span> <span class=err>&quot;</span><span class=na>will</span> <span class=na>be</span> <span class=na>added</span> <span class=na>to</span> <span class=na>event</span> <span class=na>as</span> <span class=na>body</span> <span class=na>param</span><span class=err>&quot;</span>
+            <span class=err>}</span>
+        <span class=err>}</span>
+    <span class=err>}</span>
+    <span class=na>--</span><span class=nt>&gt;</span> Creating integration 14ms
+
+    <span class=nt>&lt;--</span> <span class=na>Executing</span> <span class=na>Lambda</span> <span class=err>(</span><span class=na>lambdas-apilambda-post</span><span class=err>/</span><span class=na>index</span><span class=err>.</span><span class=na>handler</span><span class=err>)</span>
+
+
+    <span class=na>--</span><span class=nt>&gt;</span> Executing Lambda function 151ms
+
+    <span class=nt>&lt;--</span> <span class=na>Creating</span> <span class=na>response</span>
+    <span class=err>{</span>
+        <span class=err>&quot;</span><span class=na>status</span><span class=err>&quot;</span><span class=na>:</span> <span class=na>200</span><span class=err>,</span>
+        <span class=err>&quot;</span><span class=na>headers</span><span class=err>&quot;</span><span class=na>:</span> <span class=err>{},</span>
+        <span class=err>&quot;</span><span class=na>type</span><span class=err>&quot;</span><span class=na>:</span> <span class=err>&quot;</span><span class=na>application</span><span class=err>/</span><span class=na>json</span><span class=err>&quot;,</span>
+        <span class=err>&quot;</span><span class=na>body</span><span class=err>&quot;</span><span class=na>:</span> <span class=err>&quot;</span><span class=na>hello</span><span class=err>!&quot;</span>
+    <span class=err>}</span>
+    <span class=na>--</span><span class=nt>&gt;</span> Creating response 1ms
+
+  --&gt; POST /lambdas/apilambda 200 200ms 87b
+</code></pre></div><h2>Configuring AWS</h2><p>Now that we've created our lambda methods, the next step is to deploy them to AWS. This step is not documented very good, so I'll try to describe it as good as possible.</p><p>First you'll need to create a user with the <a href=https://github.com/Testlio/lambda-tools#iam-permissions>IAM-permissions described on the lambda-tools page</a>. When you've created this user, you'll have to make sure that the user has an Access Key so that it can be used to automate stuff. Now that you've got both the Access Id and Secret Access Key, you'll have to generate an API token:</p><div class=highlight><pre><code class=sh><span class=nv>$ </span>aws configure
+<span class=nv>$ </span>aws sts get-session-token
+</code></pre></div><p>Now that we have all the AWS parameters, we'll need to create a `.env` file so that the tool knows how to deploy the application:</p><div class=highlight><pre><code class=sh><span class=nv>AWS_ENVIRONMENT</span><span class=o>=</span>dev
+<span class=nv>AWS_ACCESS_KEY_ID</span><span class=o>=</span>your-key-id
+<span class=nv>AWS_SECRET_ACCESS_KEY</span><span class=o>=</span>your-key-secret
+<span class=nv>AWS_SESSION_TOKEN</span><span class=o>=</span>your-key-token
+<span class=nv>AWS_REGION</span><span class=o>=</span>eu-west-1
+<span class=nv>AWS_RUNTIME</span><span class=o>=</span>nodejs4.3
+<span class=nv>EXCLUDE_GLOBS</span><span class=o>=</span><span class=s2>&quot;event.json *.env *.dist&quot;</span>
+<span class=nv>PACKAGE_DIRECTORY</span><span class=o>=</span>build
+</code></pre></div><p>Finally we need to configure a <a href=https://aws.amazon.com/s3>AWS S3</a> bucket in which the lambda functions will be stored. This needs to be a unique index which can be configured in the `.lambda-tools-rc.json` file. Add following `tools` to the root element:</p><div class=highlight><pre><code class=json><span class=p>{</span>
+    <span class=nt>&quot;tools&quot;</span><span class=p>:</span> <span class=p>{</span>
+        <span class=nt>&quot;resources&quot;</span><span class=p>:</span> <span class=p>{</span>
+            <span class=nt>&quot;s3Bucket&quot;</span><span class=p>:</span> <span class=s2>&quot;your-unique-s3-bucket-name&quot;</span>
+        <span class=p>}</span>
+    <span class=p>}</span>
+<span class=p>}</span>
+</code></pre></div><p>Now that we've configured the project source code to run with AWS, we'll have to set up everything in AWS. Luckilly this can be done with one simple command that only needs to run once:</p><div class=highlight><pre><code class=sh><span class=nv>$ </span>node node_modules/lambda-tools/bin/lambda.js setup -r eu-west-1
+</code></pre></div><h2>Deploying your lambdas to AWS</h2><div class=highlight><pre><code class=sh><span class=nv>$ </span>node node_modules/lambda-tools/bin/lambda.js deploy -r eu-west-1
+</code></pre></div><p>By running the command above, the lambdas are build into some archive files. These archive files are stored in your AWS S3 Bucket. When this is done, the `cf.json` file is added to AWS CloudFormation which will start the orchestration of the installation:</p><ul><li>A CloudFormation stack will be created or updated based on the `cf.json` file.</li><li>The source code of the lambdas are stored in your S3 Bucket</li><li>IAM permissions will be added</li><li>A new scheduling rule will be added to CloudWatch.</li><li>New logging groups will be added to CloudWatch.</li><li>The API gateway will be configured with the `api.json` file.</li><li>The lambdas will be created and configured.</li></ul><h2>Adding configurable variables to the lambdas</h2><p>Adding custom configuration to a lambda function can be done based on environment variables. These variables can be added with the `-e` option during a deploy. When you've got a lot of configurable variables, another option is to add a .env file to every lambda directory and use the <a href=https://github.com/ncthis/env-loader target=_blank>env-loader</a>. You'll have to create an asset to make sure the .env file is added to your lambda source code. This can be done by adding a new `cf.json` file to every lambda directory that looks like:</p><div class=highlight><pre><code class=json><span class=p>{</span>
+  <span class=nt>&quot;Assets&quot;</span><span class=p>:</span> <span class=p>{</span>
+    <span class=nt>&quot;.env&quot;</span><span class=p>:</span> <span class=s2>&quot;.env&quot;</span>
+  <span class=p>},</span>
+<span class=p>}</span>
+</code></pre></div><h2>Conclusion</h2><p>If you are writing your first AWS project, getting started is pretty complex. The documentation is rather big and you'll have to find your way in all the different AWS services. Once you found your way and got your project set-up and configured, writing Lambda functions is pretty fun. They are easy to understand and there are a lot of NPM packages available for Rapid Application Development. I am definitely looking forward in writing more Lambda integrations!</p></div><a name=comments></a><div id=disqus_thread></div><script type=text/javascript>var disqus_identifier = '/blog/writing-your-first-nodjs-lambda-function';
+        var disqus_title = 'Writing your first NodeJS Lambda function';
+        var disqus_url = 'http://veewee.github.io/blog/writing-your-first-nodjs-lambda-function';
+
+        // trigger disqus-comments.js
+        var embed_disqus_comments = true;</script></div></div><div class="col-xs-12 col-sm-4 col-md-3 right-pane"><h1>whois <small>VeeWee</small></h1><div><img src=/images/9064.picture.png class="img-thumbnail img-responsive selfie" alt=Selfie></div><div><h2>Hi there!</h2><p>Glad you made it to my blog. Please feel free to take a look around. You will find some interesting stuff, mostly about web development and PHP.</p><p>Still can't get enough of me? Quick! Take a look at my <a href=//twitter.com/toonverwerft>Twitter</a> and <a href="//github.com/veewee/">Github</a> account.</p></div><div class=list-group><a class=list-group-item href=//github.com/veewee/veewee.github.io/issues/new><span class="glyphicon glyphicon-pencil"></span> Contact Me</a> <a class=list-group-item href=/atom.xml><span class="glyphicon glyphicon-pushpin"></span> Subscribe to RSS</a></div></div></div></div></div><script src=/js/b1a7.vendor.js></script><script src=/js/e51f.blog.js></script></body></html>
