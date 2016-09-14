@@ -13,6 +13,7 @@ author:
   email: toonverwerft@gmail.com
   github: veewee
   twitter: toonverwerft
+  site: 'http://veewee.github.io/'
 
 # Exclude directories and/or files from the conversion.
 # Grunt moves image files and asset directories.
