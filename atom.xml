@@ -3,7 +3,7 @@
     <title>Toon Verwerft - VeeWee</title>
     <link href="http://veewee.github.io/atom.xml" rel="self"/>
     <link href="http://veewee.github.io/"/>
-    <updated>2016-12-22T08:46:23+01:00</updated>
+    <updated>2016-12-22T10:40:41+01:00</updated>
     <id>http://veewee.github.io</id>
     <author>
         <name>Toon Verwerft</name>
@@ -18,7 +18,7 @@
         <id>http://veewee.github.io/blog/optimizing-php-performance-by-fq-function-calls</id>
         <content type="html">&lt;p&gt;
     Today, a little conversation on Twitter escalated rather quickly.
-    Apperently PHP runs function calls differently depending on namespaced or non namespaced context.
+    Apparently PHP runs function calls differently depending on namespaced or non namespaced context.
     When calling functions in a namespaced context, additional actions are triggered in PHP which result in slower execution.
     In this article, I&#39;ll explain what happens and how you can speed up your application.
 &lt;/p&gt;
