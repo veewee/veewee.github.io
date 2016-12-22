@@ -3,7 +3,7 @@
     <title>Toon Verwerft - VeeWee</title>
     <link href="http://veewee.github.io/atom.xml" rel="self"/>
     <link href="http://veewee.github.io/"/>
-    <updated>2016-12-22T14:45:43+01:00</updated>
+    <updated>2016-12-22T16:40:13+01:00</updated>
     <id>http://veewee.github.io</id>
     <author>
         <name>Toon Verwerft</name>
@@ -239,6 +239,7 @@ In the future, maybe one of the following solutions is less boring to implement:
 &lt;ul&gt;
 &lt;li&gt;Add a &lt;code&gt;declare(no_dynamic_functions=1)&lt;/code&gt; on top of the PHP file or maybe in a future &lt;a href=&quot;https://wiki.php.net/rfc/namespace_scoped_declares&quot;&gt;&lt;code&gt;namespace_scoped_declares&lt;/code&gt;&lt;/a&gt; method.&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;https://youtrack.jetbrains.com/issue/WI-34446&quot;&gt;Autocompletion to FQ function names in PHPStorm.&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/Ocramius/FunctionFQNReplacer&quot;&gt;Another awesome package by Ocramius?&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2&gt;Conclusion&lt;/h2&gt;
