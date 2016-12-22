@@ -103,7 +103,7 @@ line     #* E I O op                           fetch          ext  return  opera
 
 The opcodes look pretty much the same as in the global namespace. 
 However, there is one additional opcode added: `INIT_NS_FCALL_BY_NAME`.
-When PHP runs over this opcode, it will check if the function `call_user_func()` is found in the namspace.
+When PHP runs over this opcode, it will check if the function `call_user_func()` is found in the namespace.
 If the function exists in the namespace, PHP will run this one.
 When the function does not exist in current namespace, PHP will check if it exists in the global namespace and execute that one.
 
@@ -116,7 +116,7 @@ An example of this can be found in the [local adapter of flysystem](https://gith
 
 <h2>Benchmarks</h2>
 
-One of the next tweets stated that a performance gain from 4.5% was made by using fully qualified function calls.
+One of the next tweets stated that a performance gain of 4.5% was made by using fully qualified function calls.
 Of course, this is just a non-proven number and depends on the project you are working on.
 To make sure that I am not writing nonsense, I made a little benchmark in PHP 7.1:
 
@@ -136,7 +136,7 @@ There are 4 cases I covered:
 - Run an overridden function that exists globally and in the namespace.
 - Run a namespaced function.
 
-I've choosen a rather big amount of revs and iterations to make sure the results are accurate.
+I've chosen a rather big amount of revs and iterations to make sure the results are accurate.
 The code in the benchmark looks like this:
 
 {% highlight php %}
@@ -208,10 +208,10 @@ suite: 133a2c5566a4e9fb57b0251cebfd189bc150f104, date: 2016-12-21, stime: 22:06:
 +-------------------------+-------+-----+---------+--------+
 {% endhighlight %}
 
-As expected, the fully qualified global function call is the fastst one. 
+As expected, the fully qualified global function call is the fastest one. 
 This is because PHP does not need to go through the `INIT_NS_FCALL_BY_NAME` opcode.
 When calling the global function in a non-fully qualified way, it is slower.
-Running functions inside a namspace are always slower then running global functions.
+Running functions inside a namespace are always slower then running global functions.
 
 Of course, this is not a big overhead in this simple benchmark.
 It could be a big overhead if you think about the amount of function calls per run.
