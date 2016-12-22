@@ -108,7 +108,7 @@ If the function exists in the namespace, PHP will run this one.
 When the function does not exist in current namespace, PHP will check if it exists in the global namespace and execute that one.
 
 This handy "feature" is frequently (ab)used during testing.
-A good example for this (ab)use is overwriting the functions to read from or writo to the filesystem.
+A good example for this (ab)use is overwriting the functions to read from or write to the filesystem.
 In the source files, you can for example use the `fopen()` function.
 During the tests, you can mock this function by placing it in the namespace of the class that you are testing.
 An example of this can be found in the [local adapter of flysystem](https://github.com/thephpleague/flysystem/blob/master/tests/LocalAdapterTests.php).
