@@ -3,7 +3,7 @@ layout: post
 title:  "Optimizing PHP performance by using fully-qualified function calls"
 category: general
 tags: php performance
-summary: "Today, a little conversation on Twitter escalated rather quickly. Apperently PHP runs function calls differently depending on namespaced or non namespaced context. When calling functions in a namespaced context, additional actions are triggered in PHP which result in slower execution. In this article, I'll explain what happens and how you can speed up your application."
+summary: "Today, a little conversation on Twitter escalated rather quickly. Apparently PHP runs function calls differently depending on namespaced or non namespaced context. When calling functions in a namespaced context, additional actions are triggered in PHP which result in slower execution. In this article, I'll explain what happens and how you can speed up your application."
 image: 20161221/speed.jpg
 thumb: 20161221/thumb-speed.jpg
 ---
@@ -11,7 +11,7 @@ thumb: 20161221/thumb-speed.jpg
 
 <p>
     Today, a little conversation on Twitter escalated rather quickly.
-    Apperently PHP runs function calls differently depending on namespaced or non namespaced context.
+    Apparently PHP runs function calls differently depending on namespaced or non namespaced context.
     When calling functions in a namespaced context, additional actions are triggered in PHP which result in slower execution.
     In this article, I'll explain what happens and how you can speed up your application.
 </p>
