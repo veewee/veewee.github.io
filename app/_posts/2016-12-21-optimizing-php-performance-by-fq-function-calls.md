@@ -116,7 +116,7 @@ An example of this can be found in the [local adapter of flysystem](https://gith
 
 <h2>Benchmarks</h2>
 
-One of a next tweet stated that a performance gain from 4.5% was made by using fully qualified function calls.
+One of the next tweets stated that a performance gain from 4.5% was made by using fully qualified function calls.
 Of course, this is just a non-proven number and depends on the project you are working on.
 To make sure that I am not writing nonsense, I made a little benchmark in PHP 7.1:
 
@@ -248,5 +248,5 @@ In the future, maybe one of the following solutions is less boring to implement:
     As you can see, performance killers can hide in small corners.
     I'm glad to see how this little tweet can get this much feedback from the community in no time.
     Let's hope that a good solution for this performance problem will be added to PHP soon so that we can easily speed up our applications even more.
-    Now that the secret behind this optimization is revevealed, I am looking forward to discover more of these little performance killers.
+    Now that the secret behind this optimization is revealed, I am looking forward to discover more of these little performance killers.
 </p>
