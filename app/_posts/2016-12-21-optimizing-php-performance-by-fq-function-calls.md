@@ -236,8 +236,9 @@ foo();
 {% endhighlight %}
 
 Luckily for us, the community is very creative and alert when it comes to performance.
-In the future, maybe one of the following solutions is less boring to implement:
+Maybe one of the following (future) solutions is less boring to implement:
 
+- [Add the php_backslasher package as a git hook.](https://github.com/nilportugues/php-backslasher)
 - Add a `declare(no_dynamic_functions=1)` on top of the PHP file or maybe in a future [`namespace_scoped_declares`](https://wiki.php.net/rfc/namespace_scoped_declares) method.
 - [Autocompletion to FQ function names in PHPStorm.](https://youtrack.jetbrains.com/issue/WI-34446)
 - [Another awesome package by Ocramius?](https://github.com/Ocramius/FunctionFQNReplacer)
