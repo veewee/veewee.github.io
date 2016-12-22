@@ -3,7 +3,7 @@
     <title>Toon Verwerft - VeeWee</title>
     <link href="http://veewee.github.io/atom.xml" rel="self"/>
     <link href="http://veewee.github.io/"/>
-    <updated>2016-12-22T13:09:48+01:00</updated>
+    <updated>2016-12-22T14:45:43+01:00</updated>
     <id>http://veewee.github.io</id>
     <author>
         <name>Toon Verwerft</name>
@@ -105,7 +105,7 @@ line     &lt;span class=&quot;c&quot;&gt;#* E I O op                           f
 
 &lt;p&gt;The opcodes look pretty much the same as in the global namespace. 
 However, there is one additional opcode added: &lt;code&gt;INIT_NS_FCALL_BY_NAME&lt;/code&gt;.
-When PHP runs over this opcode, it will check if the function &lt;code&gt;call_user_func()&lt;/code&gt; is found in the namspace.
+When PHP runs over this opcode, it will check if the function &lt;code&gt;call_user_func()&lt;/code&gt; is found in the namespace.
 If the function exists in the namespace, PHP will run this one.
 When the function does not exist in current namespace, PHP will check if it exists in the global namespace and execute that one.&lt;/p&gt;
 
@@ -117,7 +117,7 @@ An example of this can be found in the &lt;a href=&quot;https://github.com/theph
 
 &lt;h2&gt;Benchmarks&lt;/h2&gt;
 
-&lt;p&gt;One of a next tweet stated that a performance gain from 4.5% was made by using fully qualified function calls.
+&lt;p&gt;One of the next tweets stated that a performance gain of 4.5% was made by using fully qualified function calls.
 Of course, this is just a non-proven number and depends on the project you are working on.
 To make sure that I am not writing nonsense, I made a little benchmark in PHP 7.1:&lt;/p&gt;
 
@@ -138,7 +138,7 @@ There are 4 cases I covered:&lt;/p&gt;
 &lt;li&gt;Run a namespaced function.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;I&amp;#39;ve choosen a rather big amount of revs and iterations to make sure the results are accurate.
+&lt;p&gt;I&amp;#39;ve chosen a rather big amount of revs and iterations to make sure the results are accurate.
 The code in the benchmark looks like this:&lt;/p&gt;
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;php&quot;&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?php&lt;/span&gt;
@@ -208,10 +208,10 @@ suite: 133a2c5566a4e9fb57b0251cebfd189bc150f104, date: 2016-12-21, stime: 22:06:
 +-------------------------+-------+-----+---------+--------+
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;As expected, the fully qualified global function call is the fastst one. 
+&lt;p&gt;As expected, the fully qualified global function call is the fastest one. 
 This is because PHP does not need to go through the &lt;code&gt;INIT_NS_FCALL_BY_NAME&lt;/code&gt; opcode.
 When calling the global function in a non-fully qualified way, it is slower.
-Running functions inside a namspace are always slower then running global functions.&lt;/p&gt;
+Running functions inside a namespace are always slower then running global functions.&lt;/p&gt;
 
 &lt;p&gt;Of course, this is not a big overhead in this simple benchmark.
 It could be a big overhead if you think about the amount of function calls per run.
@@ -247,7 +247,7 @@ In the future, maybe one of the following solutions is less boring to implement:
     As you can see, performance killers can hide in small corners.
     I&#39;m glad to see how this little tweet can get this much feedback from the community in no time.
     Let&#39;s hope that a good solution for this performance problem will be added to PHP soon so that we can easily speed up our applications even more.
-    Now that the secret behind this optimization is revevealed, I am looking forward to discover more of these little performance killers.
+    Now that the secret behind this optimization is revealed, I am looking forward to discover more of these little performance killers.
 &lt;/p&gt;
 </content>
     </entry>
