@@ -3,13 +3,254 @@
     <title>Toon Verwerft - VeeWee</title>
     <link href="http://veewee.github.io/atom.xml" rel="self"/>
     <link href="http://veewee.github.io/"/>
-    <updated>2016-09-14T08:45:23+02:00</updated>
+    <updated>2016-12-22T08:46:23+01:00</updated>
     <id>http://veewee.github.io</id>
     <author>
         <name>Toon Verwerft</name>
         <uri>http://veewee.github.io/</uri>
         <email>toonverwerft@gmail.com</email>
     </author>
+    
+    <entry>
+        <title>Optimizing PHP performance by using fully-qualified function calls</title>
+        <link href="http://veewee.github.io/blog/optimizing-php-performance-by-fq-function-calls"/>
+        <updated>2016-12-21T00:00:00+01:00</updated>
+        <id>http://veewee.github.io/blog/optimizing-php-performance-by-fq-function-calls</id>
+        <content type="html">&lt;p&gt;
+    Today, a little conversation on Twitter escalated rather quickly.
+    Apperently PHP runs function calls differently depending on namespaced or non namespaced context.
+    When calling functions in a namespaced context, additional actions are triggered in PHP which result in slower execution.
+    In this article, I&#39;ll explain what happens and how you can speed up your application.
+&lt;/p&gt;
+
+&lt;blockquote class=&quot;twitter-tweet&quot; data-lang=&quot;en&quot;&gt;&lt;p lang=&quot;en&quot; dir=&quot;ltr&quot;&gt;Wondering how much &lt;a href=&quot;https://twitter.com/hashtag/PHP?src=hash&quot;&gt;#PHP&lt;/a&gt; I could break by removing the local namespace lookup semantics for namespaced vs. core functions...&lt;/p&gt;&amp;mdash; Reviewed, BLYATIFUL! (@Ocramius) &lt;a href=&quot;https://twitter.com/Ocramius/status/811504929357660160&quot;&gt;December 21, 2016&lt;/a&gt;&lt;/blockquote&gt;
+
+&lt;script async src=&quot;//platform.twitter.com/widgets.js&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
+
+&lt;p&gt;
+    The conversation started with the tweet above. 
+    To understand the difference between global and namespaced function calls better, I&#39;ll explain what is going on under the hood.
+&lt;/p&gt;
+
+&lt;h2&gt;Calling functions in the global namespace&lt;/h2&gt;
+
+&lt;p&gt;Function calls in the global namespace look like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;php&quot;&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?php&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// global.php&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;bar&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nb&quot;&gt;call_user_func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;foo&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;After parsing this script, the opcodes look like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;sh&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;php -d vld.active&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1 -d vld.execute&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0 global.php
+
+...
+line     &lt;span class=&quot;c&quot;&gt;#* E I O op                           fetch          ext  return  operands&lt;/span&gt;
+-------------------------------------------------------------------------------------
+   4     0  E &amp;gt;   EXT_STMT
+         1        NOP
+   8     2        EXT_STMT
+         3        EXT_FCALL_BEGIN
+         4        SEND_VAL                                                 &lt;span class=&quot;s1&quot;&gt;&amp;#39;foo&amp;#39;&lt;/span&gt;
+         5        DO_FCALL                                      1          &lt;span class=&quot;s1&quot;&gt;&amp;#39;call_user_func&amp;#39;&lt;/span&gt;
+         6        EXT_FCALL_END
+         7      &amp;gt; RETURN                                                   1
+
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;As you can see, this is a simple &lt;code&gt;EXT_FCALL&lt;/code&gt; sequence of opcodes.&lt;/p&gt;
+
+&lt;h2&gt;Calling functions in a namespace&lt;/h2&gt;
+
+&lt;p&gt;Function calls in a namespace look like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;php&quot;&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?php&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// namespaced.php&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;baz&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;bar&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nb&quot;&gt;call_user_func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;foo&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;After parsing this script, the opcodes look like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;sh&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;php -d vld.active&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1 -d vld.execute&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0 global.php
+
+...
+line     &lt;span class=&quot;c&quot;&gt;#* E I O op                           fetch          ext  return  operands&lt;/span&gt;
+-------------------------------------------------------------------------------------
+   4     0  E &amp;gt;   NOP
+   6     1        EXT_STMT
+         2        NOP
+  10     3        EXT_STMT
+         4        INIT_NS_FCALL_BY_NAME
+         5        EXT_FCALL_BEGIN
+         6        SEND_VAL                                                 &lt;span class=&quot;s1&quot;&gt;&amp;#39;foo&amp;#39;&lt;/span&gt;
+         7        DO_FCALL_BY_NAME                              1
+         8        EXT_FCALL_END
+         9      &amp;gt; RETURN                                                   1
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The opcodes look pretty much the same as in the global namespace. 
+However, there is one additional opcode added: &lt;code&gt;INIT_NS_FCALL_BY_NAME&lt;/code&gt;.
+When PHP runs over this opcode, it will check if the function &lt;code&gt;call_user_func()&lt;/code&gt; is found in the namspace.
+If the function exists in the namespace, PHP will run this one.
+When the function does not exist in current namespace, PHP will check if it exists in the global namespace and execute that one.&lt;/p&gt;
+
+&lt;p&gt;This handy &amp;quot;feature&amp;quot; is frequently (ab)used during testing.
+A good example for this (ab)use is overwriting the functions to read from or writo to the filesystem.
+In the source files, you can for example use the &lt;code&gt;fopen()&lt;/code&gt; function.
+During the tests, you can mock this function by placing it in the namespace of the class that you are testing.
+An example of this can be found in the &lt;a href=&quot;https://github.com/thephpleague/flysystem/blob/master/tests/LocalAdapterTests.php&quot;&gt;local adapter of flysystem&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2&gt;Benchmarks&lt;/h2&gt;
+
+&lt;p&gt;One of a next tweet stated that a performance gain from 4.5% was made by using fully qualified function calls.
+Of course, this is just a non-proven number and depends on the project you are working on.
+To make sure that I am not writing nonsense, I made a little benchmark in PHP 7.1:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;php&quot;&gt;&lt;span class=&quot;x&quot;&gt;$ php -v&lt;/span&gt;
+
+&lt;span class=&quot;x&quot;&gt;PHP 7.1.0 (cli) (built: Dec  2 2016 11:29:13) ( NTS )&lt;/span&gt;
+&lt;span class=&quot;x&quot;&gt;Copyright (c) 1997-2016 The PHP Group&lt;/span&gt;
+&lt;span class=&quot;x&quot;&gt;Zend Engine v3.1.0-dev, Copyright (c) 1998-2016 Zend Technologies&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Next, I wrote code that can be run with the &lt;a href=&quot;https://github.com/phpbench/phpbench&quot;&gt;phpbench tool&lt;/a&gt;.
+There are 4 cases I covered:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Run a global function in a fully qualified way.&lt;/li&gt;
+&lt;li&gt;Run a global function in a non-fully qualified way.&lt;/li&gt;
+&lt;li&gt;Run an overridden function that exists globally and in the namespace.&lt;/li&gt;
+&lt;li&gt;Run a namespaced function.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I&amp;#39;ve choosen a rather big amount of revs and iterations to make sure the results are accurate.
+The code in the benchmark looks like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;php&quot;&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?php&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;foo&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+
+    &lt;span class=&quot;sd&quot;&gt;/**&lt;/span&gt;
+&lt;span class=&quot;sd&quot;&gt;     * @Revs(10000)&lt;/span&gt;
+&lt;span class=&quot;sd&quot;&gt;     * @Iterations(100)&lt;/span&gt;
+&lt;span class=&quot;sd&quot;&gt;     */&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;MixedBench&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;benchFqGlobalFunction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;\a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;benchGlobalFunction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;benchOverriddenFunction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;benchNamespacedFunction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;This is an overview of the results:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;sh&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;phpbench run bench
+
+&lt;span class=&quot;se&quot;&gt;\f&lt;/span&gt;oo&lt;span class=&quot;se&quot;&gt;\M&lt;/span&gt;ixedBench
+
+    benchFqGlobalFunction         I99 P0    &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;μ Mo&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;/r: 0.145 0.141 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;μs&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;    &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;μSD μRSD&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;/r: 0.018μs 12.59%
+    benchGlobalFunction           I99 P0    &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;μ Mo&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;/r: 0.148 0.145 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;μs&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;    &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;μSD μRSD&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;/r: 0.021μs 14.38%
+    benchOverriddenFunction       I99 P0    &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;μ Mo&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;/r: 0.157 0.157 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;μs&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;    &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;μSD μRSD&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;/r: 0.022μs 13.82%
+    benchNamespacedFunction       I99 P0    &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;μ Mo&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;/r: 0.157 0.159 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;μs&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;    &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;μSD μRSD&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;/r: 0.019μs 12.38%
+
+4 subjects, 400 iterations, 40,000 revs, 0 rejects
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;best &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;mean mode&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; worst&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 0.124 &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;0.152 0.151&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; 0.225 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;μs&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+⅀T: 60.773μs μSD/r 0.020μs μRSD/r: 13.293%
+suite: 133a2c5566a4e9fb57b0251cebfd189bc150f104, date: 2016-12-21, stime: 22:06:03
+
++-------------------------+-------+-----+---------+--------+
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; subject                 &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; revs  &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; its &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; mean    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; diff   &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
++-------------------------+-------+-----+---------+--------+
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; benchFqGlobalFunction   &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 10000 &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 100 &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 0.145μs &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 0.00%  &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; benchGlobalFunction     &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 10000 &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 100 &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 0.148μs &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; +2.26% &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; benchNamespacedFunction &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 10000 &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 100 &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 0.157μs &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; +8.55% &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; benchOverriddenFunction &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 10000 &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 100 &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 0.157μs &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; +8.38% &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
++-------------------------+-------+-----+---------+--------+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;As expected, the fully qualified global function call is the fastst one. 
+This is because PHP does not need to go through the &lt;code&gt;INIT_NS_FCALL_BY_NAME&lt;/code&gt; opcode.
+When calling the global function in a non-fully qualified way, it is slower.
+Running functions inside a namspace are always slower then running global functions.&lt;/p&gt;
+
+&lt;p&gt;Of course, this is not a big overhead in this simple benchmark.
+It could be a big overhead if you think about the amount of function calls per run.
+PHP is not able to optimize this since it is possible that functions get defined during runtime.&lt;/p&gt;
+
+&lt;h2&gt;Speeding up your application&lt;/h2&gt;
+
+&lt;p&gt;Currently the only way to speed up the function calls, is by making sure that the global functions are called in a fully qualified way.
+This is a tedious manual action. You could do this in one of these 2 ways:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;php&quot;&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?php&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// solution 1:&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;baz&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;\foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// solution 2:&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;baz&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;use&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Luckily for us, the community is very creative and alert when it comes to performance.
+In the future, maybe one of the following solutions is less boring to implement:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Add a &lt;code&gt;declare(no_dynamic_functions=1)&lt;/code&gt; on top of the PHP file or maybe in a future &lt;a href=&quot;https://wiki.php.net/rfc/namespace_scoped_declares&quot;&gt;&lt;code&gt;namespace_scoped_declares&lt;/code&gt;&lt;/a&gt; method.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://youtrack.jetbrains.com/issue/WI-34446&quot;&gt;Autocompletion to FQ function names in PHPStorm.&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;
+    As you can see, performance killers can hide in small corners.
+    I&#39;m glad to see how this little tweet can get this much feedback from the community in no time.
+    Let&#39;s hope that a good solution for this performance problem will be added to PHP soon so that we can easily speed up our applications even more.
+    Now that the secret behind this optimization is revevealed, I am looking forward to discover more of these little performance killers.
+&lt;/p&gt;
+</content>
+    </entry>
     
     <entry>
         <title>Writing your first NodeJS Lambda function</title>
