@@ -242,6 +242,8 @@ Maybe one of the following (future) solutions is less boring to implement:
 - Add a `declare(no_dynamic_functions=1)` on top of the PHP file or maybe in a future [`namespace_scoped_declares`](https://wiki.php.net/rfc/namespace_scoped_declares) method.
 - [Autocompletion to FQ function names in PHPStorm.](https://youtrack.jetbrains.com/issue/WI-34446)
 - [Another awesome package by Ocramius?](https://github.com/Ocramius/FunctionFQNReplacer)
+- [A CLI tool that checks your files for FQ function calls.](https://github.com/kelunik/fqn-check)
+- [A GrumPHP task.](https://github.com/phpro/grumphp/issues/325)
 
 
 <h2>Conclusion</h2>
