@@ -14,7 +14,7 @@ thumb: 20200606/parallel-grumpy_thumb.png
     This feature will safe you a lot of waiting, both during pre-commit and on the CI environments!
 </p>
 
-<p>
+<p align="center">
 <img src="/images/blog/20200606/parallel.gif" width="100%" />
 </p>
 
