@@ -3,13 +3,90 @@
     <title>Toon Verwerft - VeeWee</title>
     <link href="http://veewee.github.io/atom.xml" rel="self"/>
     <link href="http://veewee.github.io/"/>
-    <updated>2020-06-07T00:00:54+02:00</updated>
+    <updated>2020-06-08T06:49:44+02:00</updated>
     <id>http://veewee.github.io</id>
     <author>
         <name>Toon Verwerft</name>
         <uri>http://veewee.github.io/</uri>
         <email>toonverwerft@gmail.com</email>
     </author>
+    
+    <entry>
+        <title>Let GrumPHP fix your code!</title>
+        <link href="http://veewee.github.io/blog/let-grumphp-fix-your-code/"/>
+        <updated>2020-06-07T00:00:00+02:00</updated>
+        <id>http://veewee.github.io/blog/let-grumphp-fix-your-code</id>
+        <content type="html">&lt;p&gt;
+    One of the most requested features is the ability to automatically fix broken code.
+    Since previously we could not do this in a controlled an safe way, we decided that this won't be a GrumPHP feature.
+    &lt;a href=&quot;https://github.com/phpro/grumphp/releases/tag/v0.19.0&quot; target=&quot;_blank&quot;&gt;In the new GrumPHP version&lt;/a&gt; (0.19.0), we rewrote the task runner system.
+    Now it is possible to do these kind of code manipulations. 
+    Let's see how it works...
+&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+&lt;img src=&quot;/images/blog/20200607/fixer.gif&quot; width=&quot;100%&quot; /&gt;
+&lt;/p&gt;
+
+&lt;h2&gt;How do I get this madness to work?&lt;/h2&gt;
+
+&lt;p&gt;
+    No worries: Fixing is enabled by default!
+    Currently we added fixers for `phpcs` and `PHP-CS-Fixer`.
+    This list might be extended in the future and you can of course also provide fixers for your own custom tasks!
+&lt;/p&gt;
+
+&lt;h2&gt;How does GrumPHP knows what to fix?&lt;/h2&gt;
+
+&lt;p&gt;
+    GrumPHP will first run the configured tasks as it always did.
+    When a task fails, we already provided the commandline command to fix the code.
+    This resulted in manual copy/pasting the code, which is a stupid repeatable task.
+    With this new feature, the task can now determine if it can autofix the code by e.g. running the console command it displayed.
+    In a last phase before finishing the task runner, the autofixer process is initialized.
+    It will look for fixable tasks and after asking for your consent, it will run the fix command that is provided from the task.
+    GrumPHP will not add any new files to GIT or won't automatically commit these changes.
+&lt;/p&gt;
+
+&lt;h2&gt;You are in full control!&lt;/h2&gt;
+
+&lt;p&gt;
+    In previous versions, we only displayed the command line tool that you can use to fix your code.
+    We never wanted GrumPHP to change code during a pre-commit or inside a CI cycle.
+    Therefor, we decided to fix the code but don't stage the changes to git.
+    This way, you can always review the changes that were made before recommiting the code.
+&lt;/p&gt;
+
+&lt;h2&gt;Don't touch my code!&lt;/h2&gt;
+
+&lt;p&gt;
+    I can imagine that you don't want GrumPHP to touch your code.
+    Luckily, the fixer is configurable:
+    You can choose to completely disable it or you can choose to change the default consent answer.
+&lt;/p&gt;
+
+&lt;p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# grumphp.yaml&lt;/span&gt;
+
+&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;grumphp&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;fixer&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;enabled&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;true&lt;/span&gt;
+        &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;fix_by_default&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;false&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;/p&gt;
+
+&lt;p&gt;
+    &lt;em&gt;Note:&lt;/em&gt;
+    The `fix_by_defaut` parameter will also be used in situations where CLI input is not supported.
+    Depending on your CLI, this could be e.g. during pre-commit. 
+&lt;/p&gt;
+
+&lt;p&gt;
+Enjoy and let me know what you think of it!
+&lt;/p&gt;
+</content>
+    </entry>
     
     <entry>
         <title>Running GrumPHP tasks in parallel</title>
