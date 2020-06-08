@@ -44,8 +44,8 @@ thumb: 20200607/fixer-grumpy_thumb.png
 <p>
     In previous versions, we only displayed the command line tool that you can use to fix your code.
     We never wanted GrumPHP to change code during a pre-commit or inside a CI cycle.
-    Therefor, we decided to fix the code but don't stage the changes to git.
-    This way, you can always review the changes that were made before recommiting the code.
+    Therefore, we decided to fix the code but don't stage the changes to git.
+    This way, you can always review the changes that were made before recommitting the code.
 </p>
 
 <h2>Don't touch my code!</h2>

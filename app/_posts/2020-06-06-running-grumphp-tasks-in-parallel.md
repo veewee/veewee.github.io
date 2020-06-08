@@ -3,15 +3,15 @@ layout: post
 title:  "Running GrumPHP tasks in parallel"
 category: general
 tags: grumphp
-summary: "Last week, we launched a new version of GrumPHP. One of the main new features inside this relase is the ability to run your tasks in parallel. This feature will safe you a lot of waiting, both during pre-commit and on the CI environments!"
+summary: "Last week, we launched a new version of GrumPHP. One of the main new features inside this release is the ability to run your tasks in parallel. This feature will save you a lot of waiting, both during pre-commit and on the CI environments!"
 image: 20200606/parallel-grumpy-long.png
 thumb: 20200606/parallel-grumpy_thumb.png
 ---
 
 <p>
     Last week, we launched <a href="https://github.com/phpro/grumphp/releases/tag/v0.19.0" target="_blank">a new version of GrumPHP</a> (0.19.0).
-    One of the main new features inside this relase is the ability to run your tasks in parallel.
-    This feature will safe you a lot of waiting, both during pre-commit and on the CI environments!
+    One of the main new features inside this release is the ability to run your tasks in parallel.
+    This feature will save you a lot of waiting, both during pre-commit and on the CI environments!
 </p>
 
 <p align="center">
