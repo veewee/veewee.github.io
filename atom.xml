@@ -3,13 +3,95 @@
     <title>Toon Verwerft - VeeWee</title>
     <link href="http://veewee.github.io/atom.xml" rel="self"/>
     <link href="http://veewee.github.io/"/>
-    <updated>2020-12-02T19:47:01+01:00</updated>
+    <updated>2020-12-02T19:50:24+01:00</updated>
     <id>http://veewee.github.io</id>
     <author>
         <name>Toon Verwerft</name>
         <uri>http://veewee.github.io/</uri>
         <email>toonverwerft@gmail.com</email>
     </author>
+    
+    <entry>
+        <title>Run composer tasks in parallel</title>
+        <link href="http://veewee.github.io/blog/run-composer-tasks-in-parallel/"/>
+        <updated>2020-12-02T00:00:00+01:00</updated>
+        <id>http://veewee.github.io/blog/run-composer-tasks-in-parallel</id>
+        <content type="html">&lt;p&gt;
+Composer has a built-in way of running multiple composer scripts by declaring a script alias.
+This alias runs all specified scripts one by one and fails if one of the scripts fails.
+To save you some time, I've written the &lt;a href=&quot;https://github.com/veewee/composer-run-parallel&quot; target=&quot;_blank&quot;&gt;veewee/composer-run-parallel&lt;/a&gt; plugin that can run multiple composer scripts in parallel and won't stop before all tasks have been executed: 
+&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;p align=&quot;center&quot;&gt;
+&lt;img src=&quot;/images/blog/20201202/composer-parallel.gif&quot; alt=&quot;example&quot; width=&quot;100%&quot; /&gt;
+&lt;/p&gt;&lt;/p&gt;
+
+&lt;h1&gt;Why I created this package?&lt;/h1&gt;
+
+&lt;p&gt;
+  As the creator of &lt;a href=&quot;https://github.com/phpro/grumphp&quot; target=&quot;_blank&quot;&gt;GrumPHP&lt;/a&gt;,
+  I am used that &lt;a href=&quot;http://veewee.github.io/blog/running-grumphp-tasks-in-parallel/&quot;&gt;all tasks run in parallel&lt;/a&gt;.
+  Some of the open-source project that I work on don't have a GrumPHP configuration (yet).
+  Most of those projects run Quality Assurance tools crafted out of composer scripts.
+  Even on those projects, I want to make sure to commit good code before pushing it to a Pull Request.
+  Since I got bored of waiting for the composer scripts to run one by one, I decided to dive into the composer internals in order to make composer scripts run in parallel as well.
+&lt;/p&gt;
+
+&lt;h1&gt;Shut up and tell me how to use it!&lt;/h1&gt;
+
+&lt;p&gt;
+  Configuring parallel scripts is like configuring any regular composer script.
+  This package provides a `@parallel` script that takes other composer script aliases as arguments:
+&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;scripts&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;ci&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;@parallel cs tests&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;cs&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;php-cs-fixer fix --dry-run&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;tests&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;phpunit&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;
+  The code above adds a `ci` composer script to your project, that runs the coding styles and unit tests in parallel.
+  You can run the script like this:
+&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;composer run ci&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;
+  Most of the times, you don't want to introduce dependencies to projects you don't own.
+  Therefore, this plugin also provides a `composer parallel` command.
+  You can install this package globally, meaning you can unleash the power of parallel task execution even on packages that don't have this plugin installed:
+&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;composer parallel cs tests&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h1&gt;In closing&lt;/h1&gt;
+
+&lt;p&gt;
+  No more waiting!
+  This &lt;a href=&quot;https://github.com/veewee/composer-run-parallel&quot; target=&quot;_blank&quot;&gt;veewee/composer-run-parallel&lt;/a&gt; plugin can be quickly added to any project and is fun to use.
+  It contains a few more options. Head over to the readme on GitHub to learn more.
+&lt;/p&gt;
+
+&lt;p&gt;
+  Whilst writing the plugin, I was pleasantly surprised by what is available in the composer codebase by default.
+  Writing the package was a matter of linking the various existing components together.
+  Big-ups to the composer team!
+&lt;/p&gt;
+
+&lt;p&gt;
+  This plugin comes with one big limitation:
+  Since it is only setting composer as a dependency, it is limited to the `Loop` and `ProcessExecutor` that is provided by composer.
+  To display the result of a script, both the stderr and stdout are printed out to the end user.
+  This could result in non-sequential output if the script you are executing mixes stdout and stderr messages.
+&lt;/p&gt;
+</content>
+    </entry>
     
     <entry>
         <title>Let GrumPHP fix your code!</title>
