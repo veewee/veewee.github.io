@@ -2,7 +2,7 @@
 layout: post
 title:  "Run composer tasks in parallel"
 category: general
-tags: composer
+tags: composer parallel
 summary: "Composer has a built-in way of running multiple composer scripts by declaring a script alias. This alias runs all specified scripts one by one and fails if one of the scripts fails.  To save you some time, I've written the veewee/composer-run-parallel plugin that can run multiple composer scripts in parallel and won't stop before all tasks have been executed."
 image: 20201203/composer-parallel-long.png
 thumb: 20201203/composer-parallel_thumb.png

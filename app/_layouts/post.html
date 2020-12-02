@@ -11,7 +11,7 @@ layout: default
      <small>
         Tags:
         {% for tag in page.tags %}
-        <a href="/tags/{{ tag }}" class="label label-primary tag" title="View posts tagged with &quot;{{ tag }}&quot;">{{ tag }}</a>
+        <span class="label label-primary tag">{{ tag }}</span>
         {% if forloop.last != true %} {% endif %}
         {% endfor %}
     </small>
