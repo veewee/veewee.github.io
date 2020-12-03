@@ -3,7 +3,7 @@
     <title>Toon Verwerft - VeeWee</title>
     <link href="http://veewee.github.io/atom.xml" rel="self"/>
     <link href="http://veewee.github.io/"/>
-    <updated>2020-12-02T19:50:24+01:00</updated>
+    <updated>2020-12-03T07:49:51+01:00</updated>
     <id>http://veewee.github.io</id>
     <author>
         <name>Toon Verwerft</name>
@@ -31,7 +31,7 @@ To save you some time, I've written the &lt;a href=&quot;https://github.com/veew
 
 &lt;p&gt;
   As the creator of &lt;a href=&quot;https://github.com/phpro/grumphp&quot; target=&quot;_blank&quot;&gt;GrumPHP&lt;/a&gt;,
-  I am used that &lt;a href=&quot;http://veewee.github.io/blog/running-grumphp-tasks-in-parallel/&quot;&gt;all tasks run in parallel&lt;/a&gt;.
+  I am used that &lt;a href=&quot;/blog/running-grumphp-tasks-in-parallel/&quot;&gt;all tasks run in parallel&lt;/a&gt;.
   Some of the open-source project that I work on don't have a GrumPHP configuration (yet).
   Most of those projects run Quality Assurance tools crafted out of composer scripts.
   Even on those projects, I want to make sure to commit good code before pushing it to a Pull Request.
