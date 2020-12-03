@@ -22,7 +22,7 @@ To save you some time, I've written the <a href="https://github.com/veewee/compo
 
 <p>
   As the creator of <a href="https://github.com/phpro/grumphp" target="_blank">GrumPHP</a>,
-  I am used that <a href="http://veewee.github.io/blog/running-grumphp-tasks-in-parallel/">all tasks run in parallel</a>.
+  I am used that <a href="/blog/running-grumphp-tasks-in-parallel/">all tasks run in parallel</a>.
   Some of the open-source project that I work on don't have a GrumPHP configuration (yet).
   Most of those projects run Quality Assurance tools crafted out of composer scripts.
   Even on those projects, I want to make sure to commit good code before pushing it to a Pull Request.
