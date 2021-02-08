@@ -44,6 +44,7 @@ bool(false)
 <span class=k>use</span> <span class=nx>VeeWee\XML\DOM\Document</span><span class=p>;</span>
 <span class=k>use</span> <span class=nx>VeeWee\XML\DOM\Loader</span><span class=p>;</span>
 <span class=k>use</span> <span class=nx>VeeWee\XML\DOM\Validator</span><span class=p>;</span>
+<span class=k>use</span> <span class=nx>VeeWee\Xml\ErrorHandling\Issue\Level</span><span class=p>;</span>
 
 <span class=nv>$doc</span> <span class=o>=</span> <span class=nx>Document</span><span class=o>::</span><span class=na>configure</span><span class=p>(</span>
     <span class=nx>Configurator\utf8</span><span class=p>(),</span>
@@ -52,7 +53,8 @@ bool(false)
       <span class=nx>Loader\xml_file_loader</span><span class=p>(</span><span class=s1>&#39;data.xml&#39;</span><span class=p>)</span>
     <span class=p>),</span>
     <span class=nx>Configurator\validator</span><span class=p>(</span>
-        <span class=nx>Validator\internal_xsd_validator</span><span class=p>()</span>
+        <span class=nx>Validator\internal_xsd_validator</span><span class=p>(),</span>
+        <span class=nx>Level</span><span class=o>::</span><span class=na>warning</span><span class=p>()</span>
     <span class=p>)</span>
 <span class=p>);</span></code></pre></figure><h3>XPath improvements</h3><p>Next up is the actual querying. You start of by configuring how you want to create your XPath object. In this case, you can configure it with lookup namespaces:</p><figure class=highlight><pre><code class=language-php data-lang=php><span></span><span class=cp>&lt;?php</span>
 
