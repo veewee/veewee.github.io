@@ -156,6 +156,7 @@ use VeeWee\XML\DOM\Configurator;
 use VeeWee\XML\DOM\Document;
 use VeeWee\XML\DOM\Loader;
 use VeeWee\XML\DOM\Validator;
+use VeeWee\Xml\ErrorHandling\Issue\Level;
 
 $doc = Document::configure(
     Configurator\utf8(),
@@ -164,7 +165,8 @@ $doc = Document::configure(
       Loader\xml_file_loader('data.xml')
     ),
     Configurator\validator(
-        Validator\internal_xsd_validator()
+        Validator\internal_xsd_validator(),
+        Level::warning()
     )
 );
 {% endhighlight %}
