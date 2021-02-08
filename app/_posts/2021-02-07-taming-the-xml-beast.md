@@ -154,11 +154,15 @@ These configurable functions can contain whatever you want:
 
 use VeeWee\XML\DOM\Configurator;
 use VeeWee\XML\DOM\Document;
+use VeeWee\XML\DOM\Loader;
 use VeeWee\XML\DOM\Validator;
 
-$doc = Document::fromXmlFile('data.xml',
+$doc = Document::configure(
     Configurator\utf8(),
     Configurator\trim_spaces(),
+    Configurator\Loader(
+      Loader\xml_file_loader('data.xml')
+    ),
     Configurator\validator(
         Validator\internal_xsd_validator()
     )
