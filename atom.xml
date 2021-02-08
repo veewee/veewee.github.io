@@ -3,7 +3,7 @@
     <title>Toon Verwerft - VeeWee</title>
     <link href="http://veewee.github.io/atom.xml" rel="self"/>
     <link href="http://veewee.github.io/"/>
-    <updated>2021-02-08T07:15:29+01:00</updated>
+    <updated>2021-02-08T07:47:26+01:00</updated>
     <id>http://veewee.github.io</id>
     <author>
         <name>Toon Verwerft</name>
@@ -152,11 +152,15 @@ These configurable functions can contain whatever you want: &lt;/p&gt;
 
 &lt;span class=&quot;k&quot;&gt;use&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;VeeWee\XML\DOM\Configurator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;use&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;VeeWee\XML\DOM\Document&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;use&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;VeeWee\XML\DOM\Loader&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;use&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;VeeWee\XML\DOM\Validator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 
-&lt;span class=&quot;nv&quot;&gt;$doc&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Document&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;fromXmlFile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;data.xml&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$doc&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Document&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;configure&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
     &lt;span class=&quot;nx&quot;&gt;Configurator\utf8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
     &lt;span class=&quot;nx&quot;&gt;Configurator\trim_spaces&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;Configurator\Loader&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;Loader\xml_file_loader&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;data.xml&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
     &lt;span class=&quot;nx&quot;&gt;Configurator\validator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
         &lt;span class=&quot;nx&quot;&gt;Validator\internal_xsd_validator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;

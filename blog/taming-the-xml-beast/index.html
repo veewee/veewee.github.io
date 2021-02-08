@@ -42,11 +42,15 @@ bool(false)
 
 <span class=k>use</span> <span class=nx>VeeWee\XML\DOM\Configurator</span><span class=p>;</span>
 <span class=k>use</span> <span class=nx>VeeWee\XML\DOM\Document</span><span class=p>;</span>
+<span class=k>use</span> <span class=nx>VeeWee\XML\DOM\Loader</span><span class=p>;</span>
 <span class=k>use</span> <span class=nx>VeeWee\XML\DOM\Validator</span><span class=p>;</span>
 
-<span class=nv>$doc</span> <span class=o>=</span> <span class=nx>Document</span><span class=o>::</span><span class=na>fromXmlFile</span><span class=p>(</span><span class=s1>&#39;data.xml&#39;</span><span class=p>,</span>
+<span class=nv>$doc</span> <span class=o>=</span> <span class=nx>Document</span><span class=o>::</span><span class=na>configure</span><span class=p>(</span>
     <span class=nx>Configurator\utf8</span><span class=p>(),</span>
     <span class=nx>Configurator\trim_spaces</span><span class=p>(),</span>
+    <span class=nx>Configurator\Loader</span><span class=p>(</span>
+      <span class=nx>Loader\xml_file_loader</span><span class=p>(</span><span class=s1>&#39;data.xml&#39;</span><span class=p>)</span>
+    <span class=p>),</span>
     <span class=nx>Configurator\validator</span><span class=p>(</span>
         <span class=nx>Validator\internal_xsd_validator</span><span class=p>()</span>
     <span class=p>)</span>
