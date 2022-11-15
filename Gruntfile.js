@@ -403,7 +403,7 @@ module.exports = function (grunt) {
     'uglify',
     // 'imagemin',
     // 'svgmin',
-    'rev',
+    //'rev', // Currently broken in combination with usemin..
     'usemin',
     'htmlmin'
   ]);
