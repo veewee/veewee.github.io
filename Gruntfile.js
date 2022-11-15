@@ -44,14 +44,14 @@ module.exports = function (grunt) {
         files: [
           '.jekyll/**/*.html',
           '.tmp/css/**/*.css',
-          '{.tmp,<%= yeoman.app %>}/<%= js %>/**/*.js',
+          '{.tmp,<%= yeoman.app %>}/js/**/*.js',
           '<%= yeoman.app %>/images/**/*.{gif,jpg,jpeg,png,svg,webp}'
         ]
       }
     },
     connect: {
       options: {
-        port: 9000,
+        port: 3000,
         livereload: 35729,
         // change this to '0.0.0.0' to access the server from outside
         hostname: 'localhost'
@@ -384,7 +384,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('check', [
     'clean:server',
-    'jekyll:check',
+    //'jekyll:check', // TODO -> Warning: Configuration file: none
     'compass:server',
     'jshint:all',
     'csscss:check',

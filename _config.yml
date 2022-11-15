@@ -13,6 +13,7 @@ author:
   email: toonverwerft@gmail.com
   github: veewee
   twitter: toonverwerft
+  mastodon: 'https://phpc.social/@veewee'
   site: 'https://veewee.github.io/'
 
 url: 'https://veewee.github.io/'
@@ -41,13 +42,11 @@ future: true
 show_drafts: true
 
 # Markdown library
-markdown: redcarpet
-
-# Markdown library options
-# redcarpet:
-  # extensions: ['fenced_code_blocks', 'smart']
-
-# Use Pygments to highlight code blocks
-highlighter: pygments
+highlighter: rouge
+markdown: kramdown
+kramdown:
+  input: GFM
+  auto_ids: true
+  syntax_highlighter: rouge
 
 timezone:  Europe/Brussels
