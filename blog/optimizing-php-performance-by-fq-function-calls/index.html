@@ -1,125 +1,125 @@
-<!DOCTYPE html><html><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1"><title>Optimizing PHP performance by using fully-qualified function calls</title><meta name=viewport content="width=device-width, initial-scale=1.0"><link rel=stylesheet href=/css/7fa1.blog.css><!--[if lt IE 9]>
+<!DOCTYPE html><html><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1"><title>Optimizing PHP performance by using fully-qualified function calls</title><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/blog.css><!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-    <![endif]--><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/favicon.ico><link rel=alternate type=application/atom+xml title="Toon Verwerft" href=https://veewee.github.io/atom.xml><meta property=og:description content="Today, a little conversation on Twitter escalated rather quickly. Apparently PHP runs function calls differently depending on namespaced or non namespaced context. When calling functions in a namespaced context, additional actions are triggered in PHP which result in slower execution. In this article, I'll explain what happens and how you can speed up your application."><meta property=og:title content="Optimizing PHP performance by using fully-qualified function calls"><meta property=og:image content=https://veewee.github.io/images/blog/20161221/thumb-speed.jpg><meta property=og:image:width content=500><meta property=og:image:height content=375><meta name=twitter:card content=summary_large_image><meta name=twitter:site content=@toonverwerft><meta name=twitter:creator content=@toonverwerft></head><body class=bs-docs-home><a class=sr-only href=#content>Skip to main content</a><header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role=banner><div class=container><div class=navbar-header><button class=navbar-toggle type=button data-toggle=collapse data-target=.bs-navbar-collapse><span class=sr-only>Toggle navigation</span> <span class=icon-bar></span> <span class=icon-bar></span> <span class=icon-bar></span></button> <a href="/" class=navbar-brand>Toon Verwerft</a></div><nav class="collapse navbar-collapse bs-navbar-collapse" role=navigation><ul class="nav navbar-nav"><li><a href="/">Home</a></li><li><a href=https://twitter.com/toonverwerft>Twitter</a></li><li><a href="https://github.com/veewee/">Github</a></li><li><a href=https://www.linkedin.com/in/toonverwerft>LinkedIn</a></li><li><a href=https://speakerdeck.com/veewee>Talks</a></li></ul></nav></div></header><a name=#content></a><div id=content><div class=container><div class=row><div class="col-xs-12 col-sm-8 col-md-9 left-pane"><div class=post-details><h1>Optimizing PHP performance by using fully-qualified function calls</h1><div class=pull-right><span class="meta label label-info">21 Dec 2016</span></div><small>Tags: <span class="label label-primary tag">php</span> <span class="label label-primary tag">performance</span></small><div class=post><img src=/images/blog/20161221/speed.jpg class=post-banner alt=""><p>Today, a little conversation on Twitter escalated rather quickly. Apparently PHP runs function calls differently depending on namespaced or non namespaced context. When calling functions in a namespaced context, additional actions are triggered in PHP which result in slower execution. In this article, I'll explain what happens and how you can speed up your application.</p><blockquote class=twitter-tweet data-lang=en><p lang=en dir=ltr>Wondering how much <a href="https://twitter.com/hashtag/PHP?src=hash">#PHP</a> I could break by removing the local namespace lookup semantics for namespaced vs. core functions...</p>&mdash; Reviewed, BLYATIFUL! (@Ocramius) <a href=https://twitter.com/Ocramius/status/811504929357660160>December 21, 2016</a></blockquote><script async src=//platform.twitter.com/widgets.js charset=utf-8></script><p>The conversation started with the tweet above. To understand the difference between global and namespaced function calls better, I'll explain what is going on under the hood.</p><h2>Calling functions in the global namespace</h2><p>Function calls in the global namespace look like this:</p><figure class=highlight><pre><code class=language-php data-lang=php><span></span><span class=cp>&lt;?php</span>
+    <![endif]--><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/favicon.ico><link rel=alternate type=application/atom+xml title="Toon Verwerft" href=https://veewee.github.io/atom.xml><meta property=og:description content="Today, a little conversation on Twitter escalated rather quickly. Apparently PHP runs function calls differently depending on namespaced or non namespaced context. When calling functions in a namespaced context, additional actions are triggered in PHP which result in slower execution. In this article, I'll explain what happens and how you can speed up your application."><meta property=og:title content="Optimizing PHP performance by using fully-qualified function calls"><meta property=og:image content=https://veewee.github.io/images/blog/20161221/thumb-speed.jpg><meta property=og:image:width content=500><meta property=og:image:height content=375><meta name=twitter:card content=summary_large_image><meta name=twitter:site content=@toonverwerft><meta name=twitter:creator content=@toonverwerft><link rel=me href=https://phpc.social/@veewee></head><body class=bs-docs-home><a class=sr-only href=#content>Skip to main content</a><header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role=banner><div class=container><div class=navbar-header><button class=navbar-toggle type=button data-toggle=collapse data-target=.bs-navbar-collapse><span class=sr-only>Toggle navigation</span> <span class=icon-bar></span> <span class=icon-bar></span> <span class=icon-bar></span></button> <a href=/ class=navbar-brand>Toon Verwerft</a></div><nav class="collapse navbar-collapse bs-navbar-collapse" role=navigation><ul class="nav navbar-nav"><li><a href=/ >Home</a></li><li><a href=https://twitter.com/toonverwerft>Twitter</a></li><li><a href=https://github.com/veewee/ >Github</a></li><li><a href=https://www.linkedin.com/in/toonverwerft>LinkedIn</a></li><li><a href=https://phpc.social/@veewee>PHPC.Social</a></li><li><a href=https://speakerdeck.com/veewee>Talks</a></li></ul></nav></div></header><a name=#content></a><div id=content><div class=container><div class=row><div class="col-xs-12 col-sm-8 col-md-9 left-pane"><div class=post-details><h1>Optimizing PHP performance by using fully-qualified function calls</h1><div class=pull-right><span class="meta label label-info">21 Dec 2016</span></div><small>Tags: <span class="label label-primary tag">php</span> <span class="label label-primary tag">performance</span></small><div class=post><img src=/images/blog/20161221/speed.jpg class=post-banner alt=""><p>Today, a little conversation on Twitter escalated rather quickly. Apparently PHP runs function calls differently depending on namespaced or non namespaced context. When calling functions in a namespaced context, additional actions are triggered in PHP which result in slower execution. In this article, I'll explain what happens and how you can speed up your application.</p><blockquote class=twitter-tweet data-lang=en><p lang=en dir=ltr>Wondering how much <a href="https://twitter.com/hashtag/PHP?src=hash">#PHP</a> I could break by removing the local namespace lookup semantics for namespaced vs. core functions...</p>&mdash; Reviewed, BLYATIFUL! (@Ocramius) <a href=https://twitter.com/Ocramius/status/811504929357660160>December 21, 2016</a></blockquote><script async src=//platform.twitter.com/widgets.js charset=utf-8></script><p>The conversation started with the tweet above. To understand the difference between global and namespaced function calls better, I'll explain what is going on under the hood.</p><h2>Calling functions in the global namespace</h2><p>Function calls in the global namespace look like this:</p><figure class=highlight><pre><code class=language-php data-lang=php><span class=cp>&lt;?php</span>
 <span class=c1>// global.php</span>
 
-<span class=k>function</span> <span class=nf>foo</span><span class=p>()</span> <span class=p>{</span>
-    <span class=k>echo</span> <span class=s1>&#39;bar&#39;</span><span class=p>;</span>
+<span class=k>function</span> <span class=n>foo</span><span class=p>()</span> <span class=p>{</span>
+    <span class=k>echo</span> <span class=s1>'bar'</span><span class=p>;</span>
 <span class=p>}</span>
 
-<span class=nb>call_user_func</span><span class=p>(</span><span class=s1>&#39;foo&#39;</span><span class=p>);</span></code></pre></figure><p>After parsing this script, the opcodes look like this:</p><figure class=highlight><pre><code class=language-sh data-lang=sh><span></span>$ php -d vld.active<span class=o>=</span><span class=m>1</span> -d vld.execute<span class=o>=</span><span class=m>0</span> global.php
+<span class=nb>call_user_func</span><span class=p>(</span><span class=s1>'foo'</span><span class=p>);</span></code></pre></figure><p>After parsing this script, the opcodes look like this:</p><figure class=highlight><pre><code class=language-sh data-lang=sh><span class=nv>$ </span>php <span class=nt>-d</span> vld.active<span class=o>=</span>1 <span class=nt>-d</span> vld.execute<span class=o>=</span>0 global.php
 
 ...
-line     <span class=c1>#* E I O op                           fetch          ext  return  operands</span>
--------------------------------------------------------------------------------------
-   <span class=m>4</span>     <span class=m>0</span>  E &gt;   EXT_STMT
-         <span class=m>1</span>        NOP
-   <span class=m>8</span>     <span class=m>2</span>        EXT_STMT
-         <span class=m>3</span>        EXT_FCALL_BEGIN
-         <span class=m>4</span>        SEND_VAL                                                 <span class=s1>&#39;foo&#39;</span>
-         <span class=m>5</span>        DO_FCALL                                      <span class=m>1</span>          <span class=s1>&#39;call_user_func&#39;</span>
-         <span class=m>6</span>        EXT_FCALL_END
-         <span class=m>7</span>      &gt; RETURN                                                   <span class=m>1</span>
+line     <span class=c>#* E I O op                           fetch          ext  return  operands</span>
+<span class=nt>-------------------------------------------------------------------------------------</span>
+   4     0  E <span class=o>&gt;</span>   EXT_STMT
+         1        NOP
+   8     2        EXT_STMT
+         3        EXT_FCALL_BEGIN
+         4        SEND_VAL                                                 <span class=s1>'foo'</span>
+         5        DO_FCALL                                      1          <span class=s1>'call_user_func'</span>
+         6        EXT_FCALL_END
+         7      <span class=o>&gt;</span> RETURN                                                   1
 
-...</code></pre></figure><p>As you can see, this is a simple <code>EXT_FCALL</code> sequence of opcodes.</p><h2>Calling functions in a namespace</h2><p>Function calls in a namespace look like this:</p><figure class=highlight><pre><code class=language-php data-lang=php><span></span><span class=cp>&lt;?php</span>
+...</code></pre></figure><p>As you can see, this is a simple <code class="language-plaintext highlighter-rouge">EXT_FCALL</code> sequence of opcodes.</p><h2>Calling functions in a namespace</h2><p>Function calls in a namespace look like this:</p><figure class=highlight><pre><code class=language-php data-lang=php><span class=cp>&lt;?php</span>
 <span class=c1>// namespaced.php</span>
 
-<span class=k>namespace</span> <span class=nx>baz</span><span class=p>;</span>
+<span class=kn>namespace</span> <span class=nn>baz</span><span class=p>;</span>
 
-<span class=k>function</span> <span class=nf>foo</span><span class=p>()</span> <span class=p>{</span>
-    <span class=k>echo</span> <span class=s1>&#39;bar&#39;</span><span class=p>;</span>
+<span class=k>function</span> <span class=n>foo</span><span class=p>()</span> <span class=p>{</span>
+    <span class=k>echo</span> <span class=s1>'bar'</span><span class=p>;</span>
 <span class=p>}</span>
 
-<span class=nb>call_user_func</span><span class=p>(</span><span class=s1>&#39;foo&#39;</span><span class=p>);</span></code></pre></figure><p>After parsing this script, the opcodes look like this:</p><figure class=highlight><pre><code class=language-sh data-lang=sh><span></span>$ php -d vld.active<span class=o>=</span><span class=m>1</span> -d vld.execute<span class=o>=</span><span class=m>0</span> global.php
+<span class=nb>call_user_func</span><span class=p>(</span><span class=s1>'foo'</span><span class=p>);</span></code></pre></figure><p>After parsing this script, the opcodes look like this:</p><figure class=highlight><pre><code class=language-sh data-lang=sh><span class=nv>$ </span>php <span class=nt>-d</span> vld.active<span class=o>=</span>1 <span class=nt>-d</span> vld.execute<span class=o>=</span>0 global.php
 
 ...
-line     <span class=c1>#* E I O op                           fetch          ext  return  operands</span>
--------------------------------------------------------------------------------------
-   <span class=m>4</span>     <span class=m>0</span>  E &gt;   NOP
-   <span class=m>6</span>     <span class=m>1</span>        EXT_STMT
-         <span class=m>2</span>        NOP
-  <span class=m>10</span>     <span class=m>3</span>        EXT_STMT
-         <span class=m>4</span>        INIT_NS_FCALL_BY_NAME
-         <span class=m>5</span>        EXT_FCALL_BEGIN
-         <span class=m>6</span>        SEND_VAL                                                 <span class=s1>&#39;foo&#39;</span>
-         <span class=m>7</span>        DO_FCALL_BY_NAME                              <span class=m>1</span>
-         <span class=m>8</span>        EXT_FCALL_END
-         <span class=m>9</span>      &gt; RETURN                                                   <span class=m>1</span>
-...</code></pre></figure><p>The opcodes look pretty much the same as in the global namespace. However, there is one additional opcode added: <code>INIT_NS_FCALL_BY_NAME</code>. When PHP runs over this opcode, it will check if the function <code>call_user_func()</code> is found in the namespace. If the function exists in the namespace, PHP will run this one. When the function does not exist in current namespace, PHP will check if it exists in the global namespace and execute that one.</p><p>This handy &quot;feature&quot; is frequently (ab)used during testing. A good example for this (ab)use is overwriting the functions to read from or write to the filesystem. In the source files, you can for example use the <code>fopen()</code> function. During the tests, you can mock this function by placing it in the namespace of the class that you are testing. An example of this can be found in the <a href=https://github.com/thephpleague/flysystem/blob/master/tests/LocalAdapterTests.php>local adapter of flysystem</a>.</p><h2>Benchmarks</h2><p>One of the next tweets stated that a performance gain of 4.5% was made by using fully qualified function calls. Of course, this is just a non-proven number and depends on the project you are working on. To make sure that I am not writing nonsense, I made a little benchmark in PHP 7.1:</p><figure class=highlight><pre><code class=language-php data-lang=php><span></span><span class=x>$ php -v</span>
+line     <span class=c>#* E I O op                           fetch          ext  return  operands</span>
+<span class=nt>-------------------------------------------------------------------------------------</span>
+   4     0  E <span class=o>&gt;</span>   NOP
+   6     1        EXT_STMT
+         2        NOP
+  10     3        EXT_STMT
+         4        INIT_NS_FCALL_BY_NAME
+         5        EXT_FCALL_BEGIN
+         6        SEND_VAL                                                 <span class=s1>'foo'</span>
+         7        DO_FCALL_BY_NAME                              1
+         8        EXT_FCALL_END
+         9      <span class=o>&gt;</span> RETURN                                                   1
+...</code></pre></figure><p>The opcodes look pretty much the same as in the global namespace. However, there is one additional opcode added: <code class="language-plaintext highlighter-rouge">INIT_NS_FCALL_BY_NAME</code>. When PHP runs over this opcode, it will check if the function <code class="language-plaintext highlighter-rouge">call_user_func()</code> is found in the namespace. If the function exists in the namespace, PHP will run this one. When the function does not exist in current namespace, PHP will check if it exists in the global namespace and execute that one.</p><p>This handy “feature” is frequently (ab)used during testing. A good example for this (ab)use is overwriting the functions to read from or write to the filesystem. In the source files, you can for example use the <code class="language-plaintext highlighter-rouge">fopen()</code> function. During the tests, you can mock this function by placing it in the namespace of the class that you are testing. An example of this can be found in the <a href=https://github.com/thephpleague/flysystem/blob/master/tests/LocalAdapterTests.php>local adapter of flysystem</a>.</p><h2>Benchmarks</h2><p>One of the next tweets stated that a performance gain of 4.5% was made by using fully qualified function calls. Of course, this is just a non-proven number and depends on the project you are working on. To make sure that I am not writing nonsense, I made a little benchmark in PHP 7.1:</p><figure class=highlight><pre><code class=language-php data-lang=php><span class=err>$</span> <span class=n>php</span> <span class=o>-</span><span class=n>v</span>
 
-<span class=x>PHP 7.1.0 (cli) (built: Dec  2 2016 11:29:13) ( NTS )</span>
-<span class=x>Copyright (c) 1997-2016 The PHP Group</span>
-<span class=x>Zend Engine v3.1.0-dev, Copyright (c) 1998-2016 Zend Technologies</span></code></pre></figure><p>Next, I wrote code that can be run with the <a href=https://github.com/phpbench/phpbench>phpbench tool</a>. There are 4 cases I covered:</p><ul><li>Run a global function in a fully qualified way.</li><li>Run a global function in a non-fully qualified way.</li><li>Run an overridden function that exists globally and in the namespace.</li><li>Run a namespaced function.</li></ul><p>I&#39;ve chosen a rather big amount of revs and iterations to make sure the results are accurate. The code in the benchmark looks like this:</p><figure class=highlight><pre><code class=language-php data-lang=php><span></span><span class=cp>&lt;?php</span>
+<span class=no>PHP</span> <span class=mf>7.1.0</span> <span class=p>(</span><span class=n>cli</span><span class=p>)</span> <span class=p>(</span><span class=n>built</span><span class=o>:</span> <span class=nc>Dec</span>  <span class=mi>2</span> <span class=mi>2016</span> <span class=mi>11</span><span class=o>:</span><span class=mi>29</span><span class=o>:</span><span class=mi>13</span><span class=p>)</span> <span class=p>(</span> <span class=no>NTS</span> <span class=p>)</span>
+<span class=nf>Copyright</span> <span class=p>(</span><span class=n>c</span><span class=p>)</span> <span class=mi>1997</span><span class=o>-</span><span class=mi>2016</span> <span class=nc>The</span> <span class=no>PHP</span> <span class=nc>Group</span>
+<span class=nc>Zend</span> <span class=nc>Engine</span> <span class=n>v3</span><span class=mf>.1.0</span><span class=o>-</span><span class=n>dev</span><span class=p>,</span> <span class=nf>Copyright</span> <span class=p>(</span><span class=n>c</span><span class=p>)</span> <span class=mi>1998</span><span class=o>-</span><span class=mi>2016</span> <span class=nc>Zend</span> <span class=nc>Technologies</span></code></pre></figure><p>Next, I wrote code that can be run with the <a href=https://github.com/phpbench/phpbench>phpbench tool</a>. There are 4 cases I covered:</p><ul><li>Run a global function in a fully qualified way.</li><li>Run a global function in a non-fully qualified way.</li><li>Run an overridden function that exists globally and in the namespace.</li><li>Run a namespaced function.</li></ul><p>I’ve chosen a rather big amount of revs and iterations to make sure the results are accurate. The code in the benchmark looks like this:</p><figure class=highlight><pre><code class=language-php data-lang=php><span class=cp>&lt;?php</span>
 
-<span class=k>namespace</span> <span class=p>{</span>
-    <span class=k>function</span> <span class=nf>a</span><span class=p>(){}</span>
-    <span class=k>function</span> <span class=nf>b</span><span class=p>()</span> <span class=p>{}</span>
+<span class=n>namespace</span> <span class=p>{</span>
+    <span class=k>function</span> <span class=n>a</span><span class=p>(){}</span>
+    <span class=k>function</span> <span class=n>b</span><span class=p>()</span> <span class=p>{}</span>
 <span class=p>}</span>
 
-<span class=k>namespace</span> <span class=nx>foo</span> <span class=p>{</span>
+<span class=kn>namespace</span> <span class=nn>foo</span> <span class=p>{</span>
 
-    <span class=k>function</span> <span class=nf>b</span><span class=p>()</span> <span class=p>{}</span>
-    <span class=k>function</span> <span class=nf>c</span><span class=p>()</span> <span class=p>{}</span>
+    <span class=k>function</span> <span class=n>b</span><span class=p>()</span> <span class=p>{}</span>
+    <span class=k>function</span> <span class=n>c</span><span class=p>()</span> <span class=p>{}</span>
 
-    <span class=sd>/**</span>
-<span class=sd>     * @Revs(10000)</span>
-<span class=sd>     * @Iterations(100)</span>
-<span class=sd>     */</span>
-    <span class=k>class</span> <span class=nc>MixedBench</span>
+    <span class=cd>/**
+     * @Revs(10000)
+     * @Iterations(100)
+     */</span>
+    <span class=kd>class</span> <span class=nc>MixedBench</span>
     <span class=p>{</span>
-        <span class=k>public</span> <span class=k>function</span> <span class=nf>benchFqGlobalFunction</span><span class=p>()</span>
+        <span class=k>public</span> <span class=k>function</span> <span class=n>benchFqGlobalFunction</span><span class=p>()</span>
         <span class=p>{</span>
-            <span class=nx>\a</span><span class=p>();</span>
+            <span class=err>\</span><span class=nf>a</span><span class=p>();</span>
         <span class=p>}</span>
 
-        <span class=k>public</span> <span class=k>function</span> <span class=nf>benchGlobalFunction</span><span class=p>()</span>
+        <span class=k>public</span> <span class=k>function</span> <span class=n>benchGlobalFunction</span><span class=p>()</span>
         <span class=p>{</span>
-            <span class=nx>a</span><span class=p>();</span>
+            <span class=nf>a</span><span class=p>();</span>
         <span class=p>}</span>
 
-        <span class=k>public</span> <span class=k>function</span> <span class=nf>benchOverriddenFunction</span><span class=p>()</span>
+        <span class=k>public</span> <span class=k>function</span> <span class=n>benchOverriddenFunction</span><span class=p>()</span>
         <span class=p>{</span>
-            <span class=nx>b</span><span class=p>();</span>
+            <span class=nf>b</span><span class=p>();</span>
         <span class=p>}</span>
 
-        <span class=k>public</span> <span class=k>function</span> <span class=nf>benchNamespacedFunction</span><span class=p>()</span>
+        <span class=k>public</span> <span class=k>function</span> <span class=n>benchNamespacedFunction</span><span class=p>()</span>
         <span class=p>{</span>
-            <span class=nx>c</span><span class=p>();</span>
+            <span class=nf>c</span><span class=p>();</span>
         <span class=p>}</span>
     <span class=p>}</span>
-<span class=p>}</span></code></pre></figure><p>This is an overview of the results:</p><figure class=highlight><pre><code class=language-sh data-lang=sh><span></span>$ phpbench run bench
+<span class=p>}</span></code></pre></figure><p>This is an overview of the results:</p><figure class=highlight><pre><code class=language-sh data-lang=sh><span class=nv>$ </span>phpbench run bench
 
 <span class=se>\f</span>oo<span class=se>\M</span>ixedBench
 
-    benchFqGlobalFunction         I99 P0    <span class=o>[</span>μ Mo<span class=o>]</span>/r: <span class=m>0</span>.145 <span class=m>0</span>.141 <span class=o>(</span>μs<span class=o>)</span>  <span class=o>[</span>μSD μRSD<span class=o>]</span>/r: <span class=m>0</span>.018μs <span class=m>12</span>.59%
-    benchGlobalFunction           I99 P0    <span class=o>[</span>μ Mo<span class=o>]</span>/r: <span class=m>0</span>.148 <span class=m>0</span>.145 <span class=o>(</span>μs<span class=o>)</span>  <span class=o>[</span>μSD μRSD<span class=o>]</span>/r: <span class=m>0</span>.021μs <span class=m>14</span>.38%
-    benchOverriddenFunction       I99 P0    <span class=o>[</span>μ Mo<span class=o>]</span>/r: <span class=m>0</span>.157 <span class=m>0</span>.157 <span class=o>(</span>μs<span class=o>)</span>  <span class=o>[</span>μSD μRSD<span class=o>]</span>/r: <span class=m>0</span>.022μs <span class=m>13</span>.82%
-    benchNamespacedFunction       I99 P0    <span class=o>[</span>μ Mo<span class=o>]</span>/r: <span class=m>0</span>.157 <span class=m>0</span>.159 <span class=o>(</span>μs<span class=o>)</span>  <span class=o>[</span>μSD μRSD<span class=o>]</span>/r: <span class=m>0</span>.019μs <span class=m>12</span>.38%
+    benchFqGlobalFunction         I99 P0 	<span class=o>[</span>μ Mo]/r: 0.145 0.141 <span class=o>(</span>μs<span class=o>)</span> 	<span class=o>[</span>μSD μRSD]/r: 0.018μs 12.59%
+    benchGlobalFunction           I99 P0 	<span class=o>[</span>μ Mo]/r: 0.148 0.145 <span class=o>(</span>μs<span class=o>)</span> 	<span class=o>[</span>μSD μRSD]/r: 0.021μs 14.38%
+    benchOverriddenFunction       I99 P0 	<span class=o>[</span>μ Mo]/r: 0.157 0.157 <span class=o>(</span>μs<span class=o>)</span> 	<span class=o>[</span>μSD μRSD]/r: 0.022μs 13.82%
+    benchNamespacedFunction       I99 P0 	<span class=o>[</span>μ Mo]/r: 0.157 0.159 <span class=o>(</span>μs<span class=o>)</span> 	<span class=o>[</span>μSD μRSD]/r: 0.019μs 12.38%
 
-<span class=m>4</span> subjects, <span class=m>400</span> iterations, <span class=m>40</span>,000 revs, <span class=m>0</span> rejects
-<span class=o>(</span>best <span class=o>[</span>mean mode<span class=o>]</span> worst<span class=o>)</span> <span class=o>=</span> <span class=m>0</span>.124 <span class=o>[</span><span class=m>0</span>.152 <span class=m>0</span>.151<span class=o>]</span> <span class=m>0</span>.225 <span class=o>(</span>μs<span class=o>)</span>
-⅀T: <span class=m>60</span>.773μs μSD/r <span class=m>0</span>.020μs μRSD/r: <span class=m>13</span>.293%
-suite: 133a2c5566a4e9fb57b0251cebfd189bc150f104, date: <span class=m>2016</span>-12-21, stime: <span class=m>22</span>:06:03
+4 subjects, 400 iterations, 40,000 revs, 0 rejects
+<span class=o>(</span>best <span class=o>[</span>mean mode] worst<span class=o>)</span> <span class=o>=</span> 0.124 <span class=o>[</span>0.152 0.151] 0.225 <span class=o>(</span>μs<span class=o>)</span>
+⅀T: 60.773μs μSD/r 0.020μs μRSD/r: 13.293%
+suite: 133a2c5566a4e9fb57b0251cebfd189bc150f104, <span class=nb>date</span>: 2016-12-21, stime: 22:06:03
 
 +-------------------------+-------+-----+---------+--------+
-<span class=p>|</span> subject                 <span class=p>|</span> revs  <span class=p>|</span> its <span class=p>|</span> mean    <span class=p>|</span> diff   <span class=p>|</span>
+| subject                 | revs  | its | mean    | diff   |
 +-------------------------+-------+-----+---------+--------+
-<span class=p>|</span> benchFqGlobalFunction   <span class=p>|</span> <span class=m>10000</span> <span class=p>|</span> <span class=m>100</span> <span class=p>|</span> <span class=m>0</span>.145μs <span class=p>|</span> <span class=m>0</span>.00%  <span class=p>|</span>
-<span class=p>|</span> benchGlobalFunction     <span class=p>|</span> <span class=m>10000</span> <span class=p>|</span> <span class=m>100</span> <span class=p>|</span> <span class=m>0</span>.148μs <span class=p>|</span> +2.26% <span class=p>|</span>
-<span class=p>|</span> benchNamespacedFunction <span class=p>|</span> <span class=m>10000</span> <span class=p>|</span> <span class=m>100</span> <span class=p>|</span> <span class=m>0</span>.157μs <span class=p>|</span> +8.55% <span class=p>|</span>
-<span class=p>|</span> benchOverriddenFunction <span class=p>|</span> <span class=m>10000</span> <span class=p>|</span> <span class=m>100</span> <span class=p>|</span> <span class=m>0</span>.157μs <span class=p>|</span> +8.38% <span class=p>|</span>
-+-------------------------+-------+-----+---------+--------+</code></pre></figure><p>As expected, the fully qualified global function call is the fastest one. This is because PHP does not need to go through the <code>INIT_NS_FCALL_BY_NAME</code> opcode. When calling the global function in a non-fully qualified way, it is slower. Running functions inside a namespace are always slower then running global functions.</p><p>Of course, this is not a big overhead in this simple benchmark. It could be a big overhead if you think about the amount of function calls per run. PHP is not able to optimize this since it is possible that functions get defined during runtime.</p><h2>Speeding up your application</h2><p>Currently the only way to speed up the function calls, is by making sure that the global functions are called in a fully qualified way. This is a tedious manual action. You could do this in one of these 2 ways:</p><figure class=highlight><pre><code class=language-php data-lang=php><span></span><span class=cp>&lt;?php</span>
+| benchFqGlobalFunction   | 10000 | 100 | 0.145μs | 0.00%  |
+| benchGlobalFunction     | 10000 | 100 | 0.148μs | +2.26% |
+| benchNamespacedFunction | 10000 | 100 | 0.157μs | +8.55% |
+| benchOverriddenFunction | 10000 | 100 | 0.157μs | +8.38% |
++-------------------------+-------+-----+---------+--------+</code></pre></figure><p>As expected, the fully qualified global function call is the fastest one. This is because PHP does not need to go through the <code class="language-plaintext highlighter-rouge">INIT_NS_FCALL_BY_NAME</code> opcode. When calling the global function in a non-fully qualified way, it is slower. Running functions inside a namespace are always slower then running global functions.</p><p>Of course, this is not a big overhead in this simple benchmark. It could be a big overhead if you think about the amount of function calls per run. PHP is not able to optimize this since it is possible that functions get defined during runtime.</p><h2>Speeding up your application</h2><p>Currently the only way to speed up the function calls, is by making sure that the global functions are called in a fully qualified way. This is a tedious manual action. You could do this in one of these 2 ways:</p><figure class=highlight><pre><code class=language-php data-lang=php><span class=cp>&lt;?php</span>
 <span class=c1>// solution 1:</span>
-<span class=k>namespace</span> <span class=nx>baz</span><span class=p>;</span>
-<span class=nx>\foo</span><span class=p>();</span>
+<span class=kn>namespace</span> <span class=nn>baz</span><span class=p>;</span>
+<span class=err>\</span><span class=nf>foo</span><span class=p>();</span>
 
 <span class=c1>// solution 2:</span>
-<span class=k>namespace</span> <span class=nx>baz</span><span class=p>;</span>
-<span class=k>use</span> <span class=k>function</span> <span class=nf>foo</span><span class=p>;</span>
-<span class=nx>foo</span><span class=p>();</span></code></pre></figure><p>Luckily for us, the community is very creative and alert when it comes to performance. Maybe one of the following (future) solutions is less boring to implement:</p><ul><li><a href=https://github.com/nilportugues/php-backslasher>Add the php_backslasher package as a git hook.</a></li><li>Add a <code>declare(no_dynamic_functions=1)</code> on top of the PHP file or maybe in a future <a href=https://wiki.php.net/rfc/namespace_scoped_declares><code>namespace_scoped_declares</code></a> method.</li><li><a href=https://youtrack.jetbrains.com/issue/WI-34446>Autocompletion to FQ function names in PHPStorm.</a></li><li><a href=https://github.com/Ocramius/FunctionFQNReplacer>Another awesome package by Ocramius?</a></li><li><a href=https://github.com/kelunik/fqn-check>A CLI tool that checks your files for FQ function calls.</a></li><li><a href=https://github.com/phpro/grumphp/issues/325>A GrumPHP task.</a></li></ul><h2>Conclusion</h2><p>As you can see, performance killers can hide in small corners. I'm glad to see how this little tweet can get this much feedback from the community in no time. Let's hope that a good solution for this performance problem will be added to PHP soon so that we can easily speed up our applications even more. Now that the secret behind this optimization is revealed, I am looking forward to discover more of these little performance killers.</p></div><a name=comments></a><div id=disqus_thread></div><script type=text/javascript>var disqus_identifier = '/blog/optimizing-php-performance-by-fq-function-calls/';
+<span class=kn>namespace</span> <span class=nn>baz</span><span class=p>;</span>
+<span class=kn>use</span> <span class=k>function</span> <span class=n>foo</span><span class=p>;</span>
+<span class=nf>foo</span><span class=p>();</span></code></pre></figure><p>Luckily for us, the community is very creative and alert when it comes to performance. Maybe one of the following (future) solutions is less boring to implement:</p><ul><li><a href=https://github.com/nilportugues/php-backslasher>Add the php_backslasher package as a git hook.</a></li><li>Add a <code class="language-plaintext highlighter-rouge">declare(no_dynamic_functions=1)</code> on top of the PHP file or maybe in a future <a href=https://wiki.php.net/rfc/namespace_scoped_declares><code class="language-plaintext highlighter-rouge">namespace_scoped_declares</code></a> method.</li><li><a href=https://youtrack.jetbrains.com/issue/WI-34446>Autocompletion to FQ function names in PHPStorm.</a></li><li><a href=https://github.com/Ocramius/FunctionFQNReplacer>Another awesome package by Ocramius?</a></li><li><a href=https://github.com/kelunik/fqn-check>A CLI tool that checks your files for FQ function calls.</a></li><li><a href=https://github.com/phpro/grumphp/issues/325>A GrumPHP task.</a></li></ul><h2>Conclusion</h2><p>As you can see, performance killers can hide in small corners. I'm glad to see how this little tweet can get this much feedback from the community in no time. Let's hope that a good solution for this performance problem will be added to PHP soon so that we can easily speed up our applications even more. Now that the secret behind this optimization is revealed, I am looking forward to discover more of these little performance killers.</p></div><a name=comments></a><div id=disqus_thread></div><script type=text/javascript>var disqus_identifier = '/blog/optimizing-php-performance-by-fq-function-calls/';
         var disqus_title = 'Optimizing PHP performance by using fully-qualified function calls';
         var disqus_url = 'http://veewee.github.io/blog/optimizing-php-performance-by-fq-function-calls/';
 
         // trigger disqus-comments.js
-        var embed_disqus_comments = true;</script></div></div><div class="col-xs-12 col-sm-4 col-md-3 right-pane"><h1>whois <small>VeeWee</small></h1><div><img src=/images/picture.png class="img-thumbnail img-responsive selfie" alt=Selfie></div><div><h2>Hi there!</h2><p>Glad you made it to my blog. Please feel free to take a look around. You will find some interesting stuff, mostly about web development and PHP.</p><p>Still can't get enough of me? Quick! Take a look at my <a href=https://speakerdeck.com/veewee>Speakerdeck</a>, <a href=https://twitter.com/toonverwerft>Twitter</a> or <a href="https://github.com/veewee/">Github</a> account.</p></div><div class=list-group><a class=list-group-item href=//github.com/veewee/veewee.github.io/issues/new><span class="glyphicon glyphicon-pencil"></span> Contact Me</a> <a class=list-group-item href=/atom.xml><span class="glyphicon glyphicon-pushpin"></span> Subscribe to RSS</a></div></div></div></div></div><script src=/js/b1a7.vendor.js></script><script src=/js/e51f.blog.js></script></body></html>
+        var embed_disqus_comments = true;</script></div></div><div class="col-xs-12 col-sm-4 col-md-3 right-pane"><h1>whois <small>VeeWee</small></h1><div><img src=/images/picture.png class="img-thumbnail img-responsive selfie" alt=Selfie></div><div><h2>Hi there!</h2><p>Glad you made it to my blog. Please feel free to take a look around. You will find some interesting stuff, mostly about web development and PHP.</p><p>Still can't get enough of me? Quick! Take a look at my <a href=https://speakerdeck.com/veewee>Speakerdeck</a>, <a href=https://twitter.com/toonverwerft>Twitter</a>, <a rel=me href=https://phpc.social/@veewee>PHPC.Social</a>, or <a href=https://github.com/veewee/ >Github</a> account.</p></div><div class=list-group><a class=list-group-item href=//github.com/veewee/veewee.github.io/issues/new><span class="glyphicon glyphicon-pencil"></span> Contact Me </a><a class=list-group-item href=/atom.xml><span class="glyphicon glyphicon-pushpin"></span> Subscribe to RSS</a></div></div></div></div></div><script src=/js/vendor.js></script><script src=/js/blog.js></script></body></html>
